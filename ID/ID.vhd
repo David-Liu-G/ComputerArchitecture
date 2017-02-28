@@ -8,6 +8,7 @@ ENTITY ID IS
 				);
 			
 	PORT( 
+			clk: IN std_logic;
 			current_PC_in: IN std_logic_vector(31 DOWNTO 0);
 			instruction: IN std_logic_vector(31 DOWNTO 0);
 			result_in: IN std_logic_vector(31 DOWNTO 0);
@@ -18,7 +19,8 @@ ENTITY ID IS
 			result_index_out: OUT std_logic_vector(4 DOWNTO 0);
 			immediate_32bit: OUT std_logic_vector(31 DOWNTO 0);
 			branch_cal,I_type,store_mem,load_mem,wb_out: OUT std_logic;
-			ALU_type: OUT std_logic_vector(1 DOWNTO 0)
+			ALU_type: OUT std_logic_vector(1 DOWNTO 0);
+			is_signed: OUT std_logic
 		);
 END ID;
 
@@ -27,9 +29,18 @@ ARCHITECTURE behavior OF ID IS
 	SIGNAL registers: register_file;
 	SIGNAL op1_index,op2_index: std_logic_vector(4 DOWNTO 0);
 	SIGNAL immediate_16bit: std_logic_vector(15 DOWNTO 0);
+	SIGNAL instruction_signal: std_logic_vector(31 DOWNTO 0);
+	SIGNAL is_signed_signal: std_logic;
 	
 	BEGIN
-		current_PC_out <= current_PC_in;
+		
+		shift_register: PROCESS (clk)
+			BEGIN
+				IF (rising_edge(clk)) THEN
+					current_PC_out <= current_PC_in;
+					instruction_signal <= instruction;
+				END IF;
+		END PROCESS;
 		
 		ops: PROCESS (op1_index,op2_index)
 			BEGIN 
@@ -45,10 +56,10 @@ ARCHITECTURE behavior OF ID IS
 			END IF;
 		END PROCESS;
 		
-		instruction_decoder: PROCESS (instruction)
+		instruction_decoder: PROCESS (instruction_signal)
 			BEGIN
 				-- DECODER LOGIC THERE
-				CASE instruction IS
+				CASE instruction_signal IS
 					-- NOP
 					WHEN (others=>'0') =>
 						op1_index <= (others=>'0');
@@ -61,6 +72,7 @@ ARCHITECTURE behavior OF ID IS
 						load_mem <= '0';
 						wb_out <= '0';
 						ALU_type <= "00";
+						is_signed_signal <= '1';
 					-- TEST
 					WHEN others =>
 						op1_index <= "00001";
@@ -74,8 +86,10 @@ ARCHITECTURE behavior OF ID IS
 						load_mem <= '1';
 						wb_out <= '1';
 						ALU_type <= "11";
+						is_signed_signal <= '1';
 				END CASE;	
 			END PROCESS;
+		is_signed <= is_signed_signal;
 		
 		wb: PROCESS (wb_in)
 			BEGIN
@@ -86,11 +100,11 @@ ARCHITECTURE behavior OF ID IS
 			
 		sign_extend: PROCESS (immediate_16bit)
 			BEGIN
-				IF(immediate_16bit(15) = '1') THEN
-					immediate_32bit <= "1111111111111111" & immediate_16bit;
-				ELSIF (immediate_16bit(15) = '0') THEN
-					immediate_32bit <= "0000000000000000" & immediate_16bit;
-				END IF;
+				IF((is_signed_signal = '1') AND (immediate_16bit(15) = '1')) THEN
+						immediate_32bit <= "1111111111111111" & immediate_16bit;
+					ELSE
+						immediate_32bit <= "0000000000000000" & immediate_16bit;
+				END IF;			
 			END PROCESS;
 			
 END behavior;
