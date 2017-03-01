@@ -36,6 +36,18 @@ BEGIN
 			For i in 0 to ram_size-1 LOOP
 				ram_block(i) <= std_logic_vector(to_unsigned(i,8));
 			END LOOP;
+			ram_block(0) <= std_logic_vector(to_unsigned(32, 8));
+			ram_block(1) <= std_logic_vector(to_unsigned(40, 8));
+			ram_block(2) <= std_logic_vector(to_unsigned(67, 8));
+			ram_block(3) <= std_logic_vector(to_unsigned(0, 8));			
+			ram_block(4) <= std_logic_vector(to_unsigned(32, 8));			
+			ram_block(5) <= std_logic_vector(to_unsigned(48, 8));			
+			ram_block(6) <= std_logic_vector(to_unsigned(232, 8));			
+			ram_block(7) <= std_logic_vector(to_unsigned(0, 8));						
+			ram_block(8) <= std_logic_vector(to_unsigned(34, 8));
+			ram_block(9) <= std_logic_vector(to_unsigned(32, 8));	
+			ram_block(10) <= std_logic_vector(to_unsigned(36, 8));	
+			ram_block(11) <= std_logic_vector(to_unsigned(1, 8));		
 		end if;
 
 		--This is the actual synthesizable SRAM block
