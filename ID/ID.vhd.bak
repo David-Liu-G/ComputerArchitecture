@@ -103,7 +103,7 @@ ARCHITECTURE behavior OF ID IS
 						registers(to_integer(unsigned(result_index_in))) <= result_in;
 					END IF;
 					
-					IF((is_signed_variable = '1') AND (immediate_16bit(15) = '1')) THEN
+					IF((is_signed_signal = '1') AND (immediate_16bit(15) = '1')) THEN
 						immediate_32bit <= "1111111111111111" & immediate_16bit;
 					ELSE
 						immediate_32bit <= "0000000000000000" & immediate_16bit;
