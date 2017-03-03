@@ -33,7 +33,7 @@ ARCHITECTURE behavior OF ID IS
 			
 			VARIABLE immediate_16bit: std_logic_vector(15 DOWNTO 0);
 			VARIABLE op1_index,op2_index:  std_logic_vector(4 DOWNTO 0);
-			VARIABLE opcode,funct: std_logic_vector(5 DOWNTO 0);
+			VARIABLE opcode,funct: std_logic_vector(7 DOWNTO 0);
 			VARIABLE rs,rt,rd,shamt: std_logic_vector(4 DOWNTO 0);
 			VARIABLE address: std_logic_vector(25 DOWNTO 0);
 			
@@ -75,12 +75,12 @@ ARCHITECTURE behavior OF ID IS
 						stall_out <= '0';
 						current_PC_out <= current_PC_in;
 						
-						opcode := instruction(31 DOWNTO 26);
+						opcode := ("00"&instruction(31 DOWNTO 26));
 						rs := instruction(25 DOWNTO 21);
 						rt := instruction(20 DOWNTO 16);
 						rd := instruction(15 DOWNTO 11);
 						shamt := instruction(10 DOWNTO 6);
-						funct := instruction(5 DOWNTO 0);
+						funct := ("00"&instruction(5 DOWNTO 0));
 						immediate_16bit := instruction(15 DOWNTO 0);
 						address := instruction(25 DOWNTO 0);
 						
