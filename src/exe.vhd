@@ -12,11 +12,12 @@ port(
 	operand2 : in std_logic_vector (31 downto 0);
 
 	shamt : in std_logic_vector (4 downto 0);
+	immediate : in std_logic_vector (31 downto 0);
 
 	alu_result : out std_logic_vector (31 downto 0);
 
-	instruction_type : in integer range 0 to 26;
-	instruction_type_out: out integer range 0 to 26
+	alu_type : in std_logic_vector(4 downto 0);
+	alu_type_out: out std_logic_vector(4 downto 0)
 );
 end exe;
 
@@ -31,12 +32,22 @@ clock_process: process (clock)
 	variable sign_operand2 : integer;
 	variable sign_result : integer;
 	variable sign_remainder: integer;
+	variable sign_immediate : integer;
+	variable sign_shamt : integer;
+	
+	variable instruction_type : integer;
 
 	variable big_buffer: std_logic_vector (63 downto 0);
 begin
 	if (clock'event and clock = '1') then
 		sign_operand1 := to_integer(signed(operand1));
 		sign_operand2 := to_integer(signed(operand2));
+
+		sign_immediate := to_integer(signed(immediate));
+		sign_shamt := to_integer(signed(shamt));
+
+		instruction_type := to_integer(signed(alu_type));
+
 		if (stall = '1') then
 			sign_result := 0;
 			alu_result <= std_logic_vector(to_signed(sign_result, 32));
@@ -47,7 +58,7 @@ begin
 			sign_result := sign_operand1 - sign_operand2;
 			alu_result <= std_logic_vector(to_signed(sign_result, 32));
 		elsif (instruction_type = 2) then --add immediate
-			sign_result := sign_operand1 + sign_operand2;
+			sign_result := sign_operand1 + sign_immediate;
 			alu_result <= std_logic_vector(to_signed(sign_result, 32));
 		elsif (instruction_type = 3) then --multiply
 			sign_result := sign_operand1 * sign_operand2;
@@ -67,7 +78,7 @@ begin
 			end if;
 			alu_result <= std_logic_vector(to_signed(sign_result, 32));
 		elsif (instruction_type = 6) then --set less than immediate
-			if (sign_operand1 < sign_operand2) then
+			if (sign_operand1 < sign_immediate) then
 				sign_result := 1;
 			else
 				sign_result := 0;
@@ -82,26 +93,23 @@ begin
 		elsif (instruction_type = 10) then --xor
 			alu_result <= operand1 xor operand2;
 		elsif (instruction_type = 11) then --and imme
-			alu_result <= operand1 and operand2;
+			alu_result <= operand1 and immediate;
 		elsif (instruction_type = 12) then --or imme
-			alu_result <= operand1 or operand2;
+			alu_result <= operand1 or immediate;
 		elsif (instruction_type = 13) then --xor imme
-			alu_result <= operand1 xor operand2;
+			alu_result <= operand1 xor immediate;
 		elsif (instruction_type = 14) then -- move from hi
 			alu_result <= hi_part;
 		elsif (instruction_type = 15) then -- move from low
 			alu_result <= low_part;
 		elsif (instruction_type = 16) then --load upper immediate
-			alu_result <= operand2(15 downto 0) & "0000000000000000";
+			alu_result <= immediate(15 downto 0) & "0000000000000000";
 		elsif (instruction_type = 17) then --shift left logical
-			sign_operand2 := to_integer(signed(operand2));
-			alu_result <= std_logic_vector(signed(operand1) sll sign_operand2);
+			alu_result <= std_logic_vector(signed(operand1) sll sign_shamt);
 		elsif (instruction_type = 18) then --shift right logical
-			sign_operand2 := to_integer(signed(operand2));
-			alu_result <= std_logic_vector(signed(operand1) srl sign_operand2);
+			alu_result <= std_logic_vector(signed(operand1) srl sign_shamt);
 		elsif (instruction_type = 19) then --shift right arithmetic
-			sign_operand2 := to_integer(signed(operand2));
-			alu_result <= std_logic_vector(shift_right(signed(operand1), sign_operand2));
+			alu_result <= std_logic_vector(shift_right(signed(operand1), sign_shamt));
 		elsif (instruction_type = 20) then --load word, do nothing
  
 		elsif (instruction_type = 21) then -- store word
