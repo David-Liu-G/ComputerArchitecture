@@ -1,0 +1,6 @@
+/src/*.bak
+*.bak
+/src/*.mti
+/src/*.mpf
+/src/*.wlf
+work
