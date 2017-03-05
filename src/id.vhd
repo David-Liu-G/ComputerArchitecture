@@ -29,6 +29,15 @@ ARCHITECTURE behavior OF ID IS
 	SIGNAL registers: register_file:= (others=>(others=>'0'));
 	
 	BEGIN
+	registers(1) <= std_logic_vector(to_signed(5, 32));
+	registers(2) <= std_logic_vector(to_signed(12, 32));
+	registers(3) <= std_logic_vector(to_signed(52, 32));
+	registers(4) <= std_logic_vector(to_signed(32, 32));
+	registers(5) <= std_logic_vector(to_signed(13, 32));
+	registers(6) <= std_logic_vector(to_signed(3, 32));
+	registers(7) <= std_logic_vector(to_signed(72, 32));
+	registers(8) <= std_logic_vector(to_signed(-6, 32));
+	registers(9) <= std_logic_vector(to_signed(-12, 32));
 		
 		ID_PROCESS: PROCESS (clk, stall_in)
 			
@@ -70,8 +79,10 @@ ARCHITECTURE behavior OF ID IS
 
 			
 			BEGIN
-				IF (rising_edge(clk) OR falling_edge(stall_in)) THEN
-					IF(stall_in = '0') THEN
+				IF (clk'event and clk = '1') THEN
+					IF(stall_in = '1') THEN
+						stall_out <= '1';
+					else
 					
 						stall_out <= '0';
 						current_PC_out <= current_PC_in;
@@ -210,9 +221,9 @@ ARCHITECTURE behavior OF ID IS
 						END IF;	
 						
 						
-						IF((wb_in = '1') AND (NOT(result_index_in = "00000"))) THEN
-							registers(to_integer(unsigned(result_index_in))) <= result_in;
-						END IF;
+						--IF((wb_in = '1') AND (NOT(result_index_in = "00000"))) THEN
+							--registers(to_integer(unsigned(result_index_in))) <= result_in;
+						--END IF;
 						
 						IF(immediate_16bit(15) = '1') THEN
 							immediate_32bit <= "1111111111111111" & immediate_16bit;
@@ -220,8 +231,6 @@ ARCHITECTURE behavior OF ID IS
 							immediate_32bit <= "0000000000000000" & immediate_16bit;
 						END IF;	
 						
-					ELSE -- stall_in = 1
-						stall_out <= '1';
 					END IF;
 			END IF;
 		END PROCESS;

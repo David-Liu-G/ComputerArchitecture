@@ -92,7 +92,7 @@ signal m_write : std_logic;
 signal m_writedata : std_logic_vector (7 downto 0);
 signal m_waitrequest : std_logic;
 
-signal f_stall : std_logic;
+signal f_stall : std_logic := '1';
 signal f_instruction : std_logic_vector (31 downto 0);
 
 signal pc_dump : integer;
@@ -104,7 +104,7 @@ signal d_shamt : std_logic_vector(4 downto 0);
 signal d_op1, d_op2: std_logic_vector(31 downto 0);
 signal d_immediate : std_logic_vector(31 downto 0);
 signal d_alu_type : std_logic_vector(4 downto 0);
-signal d_stall : std_logic;
+signal d_stall : std_logic := '1';
 
 signal e_alu_result : std_logic_vector (31 downto 0);
 
@@ -200,30 +200,21 @@ f_reset <= '0';
 wait until (f_stall'event and f_stall = '0');
 assert (f_instruction = X"00432820") severity error;
 report "fetch finished";
-wait for clk_period;
-assert (to_integer(unsigned(d_alu_type)) = 0) severity error;
-report "decode finished";
-wait for 2*clk_period;
+wait for 2.1*clk_period;
 assert (to_integer(signed(e_alu_result)) = 64) severity error;
 report "get result";
 
 wait until (f_stall'event and f_stall = '0');
 assert (f_instruction = X"00E83020") severity error;
 report "fetch finished";
-wait for clk_period;
-assert (to_integer(unsigned(d_alu_type)) = 0) severity error;
-report "decode finished";
-wait for 2*clk_period;
+wait for 2.1*clk_period;
 assert (to_integer(signed(e_alu_result)) = 66) severity error;
 report "get result";
 
 wait until (f_stall'event and f_stall = '0');
 assert (f_instruction = X"01242022") severity error;
 report "fetch finished";
-wait for clk_period;
-assert (to_integer(unsigned(d_alu_type)) = 0) severity error;
-report "decode finished";
-wait for 2*clk_period;
+wait for 2.1*clk_period;
 assert (to_integer(signed(e_alu_result)) = -44) severity error;
 report "get result";
 
