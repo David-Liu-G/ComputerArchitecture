@@ -7,6 +7,23 @@ end fetch_tb;
 
 architecture behavior of fetch_tb is
 
+component memory is 
+GENERIC(
+    ram_size : INTEGER := 32768;
+    mem_delay : time := 10 ns;
+    clock_period : time := 1 ns
+);
+PORT (
+    clock: IN STD_LOGIC;
+    writedata: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+    address: IN INTEGER RANGE 0 TO ram_size-1;
+    memwrite: IN STD_LOGIC;
+    memread: IN STD_LOGIC;
+    readdata: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+    waitrequest: OUT STD_LOGIC
+);
+end component;
+
 component fetch is
 generic(
     ram_size : INTEGER := 32768
@@ -25,6 +42,25 @@ port(
 );
 end component;
 
+component ID is
+port(
+	clk: IN std_logic;
+	current_PC_in: IN integer;
+	instruction: IN std_logic_vector(31 DOWNTO 0);
+	result_in: IN std_logic_vector(31 DOWNTO 0);
+	result_index_in: IN std_logic_vector(4 DOWNTO 0);
+	stall_in,wb_in: IN std_logic;
+
+	current_PC_out: OUT integer;
+	shamt: OUT std_logic_vector(4 DOWNTO 0);
+	op1,op2: OUT std_logic_vector(31 DOWNTO 0);
+	result_index_out: OUT std_logic_vector(4 DOWNTO 0);
+	immediate_32bit: OUT std_logic_vector(31 DOWNTO 0);
+	ALU_type: OUT std_logic_vector(4 DOWNTO 0);
+	stall_out: OUT std_logic
+);
+end component;
+
 component exe is
 port(
 	clock : in std_logic;
@@ -35,89 +71,48 @@ port(
 	operand2 : in std_logic_vector (31 downto 0);
 
 	shamt : in std_logic_vector (4 downto 0);
+	immediate : in std_logic_vector (31 downto 0);
 
 	alu_result : out std_logic_vector (31 downto 0);
 
-	instruction_type : in integer range 0 to 26;
-	instruction_type_out: out integer range 0 to 26
-);
-end component;
-
-component decoder is
-port(
-	clock : in std_logic;
-
-	stall : in std_logic;
-	stall_out : out std_logic;
-
-	instruction : in std_logic_vector (31 downto 0);
-	
-	operand1 : out std_logic_vector (31 downto 0);
-	operand2 : out std_logic_vector (31 downto 0);
-	instruction_type : out integer range 0 to 26
-);
-end component;
-
-component memory is 
-GENERIC(
-    ram_size : INTEGER := 32768;
-    mem_delay : time := 10 ns;
-    clock_period : time := 1 ns
-);
-PORT (
-    clock: IN STD_LOGIC;
-    writedata: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-    address: IN INTEGER RANGE 0 TO ram_size-1;
-    memwrite: IN STD_LOGIC;
-    memread: IN STD_LOGIC;
-    readdata: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
-    waitrequest: OUT STD_LOGIC
+	alu_type : in std_logic_vector(4 downto 0);
+	alu_type_out: out std_logic_vector(4 downto 0)
 );
 end component;
 	
 -- test signals 
-signal reset : std_logic := '0';
+signal f_reset : std_logic := '0';
 signal clk : std_logic := '0';
 constant clk_period : time := 1 ns;
-
-signal fetch_stall_out : std_logic;
-signal instruction : std_logic_vector (31 downto 0);
-
-signal decoder_stall_out : std_logic;
-signal exe_stall_out: std_logic;
-
-signal operand1 : std_logic_vector (31 downto 0);
-signal operand2 : std_logic_vector (31 downto 0);
-signal instruction_type : integer := 0;
-signal shamt : std_logic_vector (4 downto 0);
 
 signal m_addr : integer range 0 to 2147483647;
 signal m_read : std_logic;
 signal m_readdata : std_logic_vector (7 downto 0);
 signal m_write : std_logic;
 signal m_writedata : std_logic_vector (7 downto 0);
-signal m_waitrequest : std_logic; 
+signal m_waitrequest : std_logic;
 
-signal alu_result : std_logic_vector (31 downto 0);
+signal f_stall : std_logic;
+signal f_instruction : std_logic_vector (31 downto 0);
+
+signal pc_dump : integer;
+signal result_in_dump : std_logic_vector(31 downto 0);
+signal result_index_in_dump : std_logic_vector(4 downto 0);
+signal wb_in_dump : std_logic;
+
+signal d_shamt : std_logic_vector(4 downto 0);
+signal d_op1, d_op2: std_logic_vector(31 downto 0);
+signal d_immediate : std_logic_vector(31 downto 0);
+signal d_alu_type : std_logic_vector(4 downto 0);
+signal d_stall : std_logic;
+
+signal e_alu_result : std_logic_vector (31 downto 0);
+
 
 begin
 
 -- Connect the components which we instantiated above to their
 -- respective signals.
-
-fet: fetch 
-port map(
-    clock => clk,
-    reset => reset,
-
-    stall => fetch_stall_out,
-    instruction => instruction,
-
-    m_addr => m_addr,
-    m_read => m_read,
-    m_readdata => m_readdata,
-    m_waitrequest => m_waitrequest
-);
 
 MEM : memory
 port map (
@@ -130,34 +125,56 @@ port map (
     waitrequest => m_waitrequest
 );
 
-dec: decoder
+fet: fetch 
+port map(
+    clock => clk,
+    reset => f_reset,
+
+    stall => f_stall,
+    instruction => f_instruction,
+
+    m_addr => m_addr,
+    m_read => m_read,
+    m_readdata => m_readdata,
+    m_waitrequest => m_waitrequest
+);
+
+dec: ID
 port map (
-	clock => clk,
+	clk => clk,
+	current_PC_in => pc_dump,
+	instruction => f_instruction,
+	result_in => result_in_dump,
+	result_index_in => result_index_in_dump,
+	stall_in => f_stall,
+	wb_in => wb_in_dump,
 
-	stall => fetch_stall_out,
-	stall_out => decoder_stall_out,
-
-	instruction => instruction,
-	
-	operand1 => operand1,
-	operand2 => operand2,
-	instruction_type => instruction_type
+	--current_PC_out: OUT integer;
+	shamt => d_shamt,
+	op1 => d_op1,
+	op2 => d_op2,
+	--result_index_out: OUT std_logic_vector(4 DOWNTO 0);
+	immediate_32bit => d_immediate,
+	ALU_type => d_alu_type,
+	stall_out => d_stall
 );
 
 ex: exe
 port map(
 	clock => clk,
 		
-	stall => decoder_stall_out,
+	stall => d_stall,
 
-	operand1 => operand1,
-	operand2 => operand2,
+	operand1 => d_op1,
+	operand2 => d_op2,
 
-	shamt => shamt,
+	shamt => d_shamt,
+	immediate => d_immediate,
 
-	alu_result => alu_result,
+	alu_result => e_alu_result,
 
-	instruction_type => instruction_type
+	alu_type => d_alu_type
+	--alu_type_out: out std_logic_vector(4 downto 0);
 	
 );
 				
@@ -176,32 +193,42 @@ begin
 --wait for mem setup
 wait for 20*clk_period;
 
-reset <= '1';
+f_reset <= '1';
 wait for clk_period;
-reset <= '0';
+f_reset <= '0';
 
-wait until (fetch_stall_out'event and fetch_stall_out = '0');
-assert (instruction = X"00432820") severity error;
+wait until (f_stall'event and f_stall = '0');
+assert (f_instruction = X"00432820") severity error;
 report "fetch finished";
-wait for 3*clk_period;
-assert (to_integer(signed(alu_result)) = 64) severity error;
+wait for clk_period;
+assert (to_integer(unsigned(d_alu_type)) = 0) severity error;
+report "decode finished";
+wait for 2*clk_period;
+assert (to_integer(signed(e_alu_result)) = 64) severity error;
 report "get result";
 
-wait until (fetch_stall_out'event and fetch_stall_out = '0');
-assert (instruction = X"00E83020") severity error;
+wait until (f_stall'event and f_stall = '0');
+assert (f_instruction = X"00E83020") severity error;
 report "fetch finished";
-wait for 3*clk_period;
-assert (to_integer(signed(alu_result)) = 66) severity error;
+wait for clk_period;
+assert (to_integer(unsigned(d_alu_type)) = 0) severity error;
+report "decode finished";
+wait for 2*clk_period;
+assert (to_integer(signed(e_alu_result)) = 66) severity error;
 report "get result";
 
-wait until (fetch_stall_out'event and fetch_stall_out = '0');
-assert (instruction = X"01242022") severity error;
+wait until (f_stall'event and f_stall = '0');
+assert (f_instruction = X"01242022") severity error;
 report "fetch finished";
-wait for 3*clk_period;
-assert (to_integer(signed(alu_result)) = -44) severity error;
+wait for clk_period;
+assert (to_integer(unsigned(d_alu_type)) = 0) severity error;
+report "decode finished";
+wait for 2*clk_period;
+assert (to_integer(signed(e_alu_result)) = -44) severity error;
 report "get result";
 
 wait;
 end process;
 	
 end;
+
