@@ -1,0 +1,64 @@
+C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/exe_tb.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/exe_tb.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity exe_tb
+-- Compiling architecture behavior of exe_tb
+
+} {} {}} C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/first_three_stage_tb.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/first_three_stage_tb.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity fetch_tb
+-- Compiling architecture behavior of fetch_tb
+
+} {} {}} C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/id_test.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/id_test.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity decoder
+-- Compiling architecture arch of decoder
+
+} {} {}} C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/id.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/id.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity ID
+-- Compiling architecture behavior of ID
+
+} {} {}} C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity memory
+-- Compiling architecture rtl of memory
+
+} {} {}} C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/fetch.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/fetch.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity fetch
+-- Compiling architecture arch of fetch
+
+} {} {}} C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/exe.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/exe.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity exe
+-- Compiling architecture arch of exe
+
+} {} {}}

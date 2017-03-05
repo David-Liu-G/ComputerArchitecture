@@ -30,7 +30,7 @@ ARCHITECTURE behavior OF ID IS
 	
 	BEGIN
 		
-		ID_PROCESS: PROCESS (clk, stall_in)
+		ID_PROCESS: PROCESS (clk)
 			
 			VARIABLE immediate_16bit: std_logic_vector(15 DOWNTO 0);
 			VARIABLE op1_index,op2_index:  std_logic_vector(4 DOWNTO 0);
@@ -70,7 +70,7 @@ ARCHITECTURE behavior OF ID IS
 
 			
 			BEGIN
-				IF (rising_edge(clk) OR falling_edge(stall_in)) THEN
+				IF (rising_edge(clk)) THEN
 					IF(stall_in = '0') THEN
 					
 						stall_out <= '0';
