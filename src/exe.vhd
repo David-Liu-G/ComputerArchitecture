@@ -1,4 +1,4 @@
- library ieee;
+library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
@@ -55,7 +55,7 @@ begin
 		sign_immediate := to_integer(signed(immediate));
 		sign_shamt := to_integer(signed(shamt));
 
-		instruction_type := to_integer(signed(alu_type));
+		instruction_type := to_integer(unsigned(alu_type));
 
 		if (stall = '1') then
 			sign_result := 0;
