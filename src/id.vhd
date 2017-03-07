@@ -26,26 +26,20 @@ END ID;
 
 ARCHITECTURE behavior OF ID IS
 	TYPE register_file IS ARRAY(register_number-1 DOWNTO 1) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
-	SIGNAL registers: register_file:= (others=>(others=>'0'));
+	SIGNAL registers: register_file:= (X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",
+	                                   X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",
+	                                   X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",std_logic_vector(to_signed(-12, 32)),std_logic_vector(to_signed(-6, 32)),
+	                                   std_logic_vector(to_signed(72, 32)),std_logic_vector(to_signed(3, 32)),std_logic_vector(to_signed(13, 32)),std_logic_vector(to_signed(32, 32)),std_logic_vector(to_signed(52, 32)),std_logic_vector(to_signed(12, 32)),std_logic_vector(to_signed(5, 32)));
 	
-	BEGIN
-	registers(1) <= std_logic_vector(to_signed(5, 32));
-	registers(2) <= std_logic_vector(to_signed(12, 32));
-	registers(3) <= std_logic_vector(to_signed(52, 32));
-	registers(4) <= std_logic_vector(to_signed(32, 32));
-	registers(5) <= std_logic_vector(to_signed(13, 32));
-	registers(6) <= std_logic_vector(to_signed(3, 32));
-	registers(7) <= std_logic_vector(to_signed(72, 32));
-	registers(8) <= std_logic_vector(to_signed(-6, 32));
-	registers(9) <= std_logic_vector(to_signed(-12, 32));
-		
-		ID_PROCESS: PROCESS (clk, stall_in)
+	BEGIN		
+		ID_PROCESS: PROCESS (clk)
 			
 			VARIABLE immediate_16bit: std_logic_vector(15 DOWNTO 0);
 			VARIABLE op1_index,op2_index:  std_logic_vector(4 DOWNTO 0);
 			VARIABLE opcode,funct: std_logic_vector(7 DOWNTO 0);
 			VARIABLE rs,rt,rd: std_logic_vector(4 DOWNTO 0);
 			VARIABLE address: std_logic_vector(25 DOWNTO 0);
+			VARIABLE op1_buff,op2_buff,result_buff: std_logic_vector(31 DOWNTO 0);
 			
 			CONSTANT type_add: std_logic_vector(4 DOWNTO 0):= 			"00000";
 			CONSTANT type_sub: std_logic_vector(4 DOWNTO 0):= 			"00001";
@@ -79,7 +73,7 @@ ARCHITECTURE behavior OF ID IS
 
 			
 			BEGIN
-				IF (clk'event and clk = '1') THEN
+				IF (rising_edge(clk)) THEN
 					IF(stall_in = '1') THEN
 						stall_out <= '1';
 					else
@@ -207,23 +201,24 @@ ARCHITECTURE behavior OF ID IS
 					
 
 						IF((op1_index = "00000") AND (op2_index = "00000")) THEN
-							op1 <= (others => '0');
-							op2 <= (others => '0');
+							op1_buff := (others => '0');
+							op2_buff := (others => '0');
 						ELSIF (op1_index = "00000") THEN
-							op1 <= (others => '0');
-							op2 <= registers(to_integer(unsigned(op2_index)));
+							op1_buff := (others => '0');
+							op2_buff := registers(to_integer(unsigned(op2_index)));
 						ELSIF (op2_index = "00000") THEN 
-							op1 <= registers(to_integer(unsigned(op1_index)));
-							op2 <= (others => '0');
+							op1_buff := registers(to_integer(unsigned(op1_index)));
+							op2_buff := (others => '0');
 						ELSE 
-							op1 <= registers(to_integer(unsigned(op1_index)));
-							op2 <= registers(to_integer(unsigned(op2_index)));
+							op1_buff := registers(to_integer(unsigned(op1_index)));
+							op2_buff := registers(to_integer(unsigned(op2_index)));
 						END IF;	
 						
-						
-						--IF((wb_in = '1') AND (NOT(result_index_in = "00000"))) THEN
-							--registers(to_integer(unsigned(result_index_in))) <= result_in;
-						--END IF;
+						op1 <= op1_buff;
+						op2 <= op2_buff;
+						IF((wb_in = '1') AND (NOT(result_index_in = "00000"))) THEN
+						  registers(to_integer(unsigned(result_index_in))) <= result_in;
+						END IF;
 						
 						IF(immediate_16bit(15) = '1') THEN
 							immediate_32bit <= "1111111111111111" & immediate_16bit;

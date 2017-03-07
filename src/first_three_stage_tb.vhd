@@ -198,23 +198,30 @@ wait for clk_period;
 f_reset <= '0';
 
 wait until (f_stall'event and f_stall = '0');
+wait for clk_period;
 assert (f_instruction = X"00432820") severity error;
 report "fetch finished";
-wait for 2.1*clk_period;
+wb_in_dump <= '1';
+result_index_in_dump <= "11111";
+result_in_dump <= (others=>'1');
+wait for 1.1*clk_period;
 assert (to_integer(signed(e_alu_result)) = 64) severity error;
 report "get result";
+wb_in_dump <= '0';
 
 wait until (f_stall'event and f_stall = '0');
+wait for clk_period;
 assert (f_instruction = X"00E83020") severity error;
 report "fetch finished";
-wait for 2.1*clk_period;
+wait for 1.1*clk_period;
 assert (to_integer(signed(e_alu_result)) = 66) severity error;
 report "get result";
 
 wait until (f_stall'event and f_stall = '0');
+wait for clk_period;
 assert (f_instruction = X"01242022") severity error;
 report "fetch finished";
-wait for 2.1*clk_period;
+wait for 1.1*clk_period;
 assert (to_integer(signed(e_alu_result)) = -44) severity error;
 report "get result";
 
