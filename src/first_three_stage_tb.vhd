@@ -73,10 +73,17 @@ port(
 	shamt : in std_logic_vector (4 downto 0);
 	immediate : in std_logic_vector (31 downto 0);
 
-	alu_result : out std_logic_vector (31 downto 0);
-
 	alu_type : in std_logic_vector(4 downto 0);
-	alu_type_out: out std_logic_vector(4 downto 0)
+	result_index_in : in std_logic_vector(4 downto 0);
+	pc_pointer : in integer;
+
+	pc_pointer_out : out integer;
+	alu_type_out: out std_logic_vector(4 downto 0);
+	alu_result : out std_logic_vector (31 downto 0);
+	branch_taken_in: out integer;
+	operand2_out : out std_logic_vector (31 downto 0);
+	stall_out : out std_logic;
+	result_index_out : out std_logic_vector(4 downto 0)
 );
 end component;
 	
@@ -105,8 +112,16 @@ signal d_op1, d_op2: std_logic_vector(31 downto 0);
 signal d_immediate : std_logic_vector(31 downto 0);
 signal d_alu_type : std_logic_vector(4 downto 0);
 signal d_stall : std_logic := '1';
+signal d_pc : integer;
+signal d_result_index : std_logic_vector(4 downto 0);
 
 signal e_alu_result : std_logic_vector (31 downto 0);
+signal e_pc : integer;
+signal e_alu_type : std_logic_vector(4 downto 0);
+signal e_branch_taken : integer;
+signal e_operand2 : std_logic_vector(31 downto 0);
+signal e_stall : std_logic;
+signal e_result_index : std_logic_vector(4 downto 0);
 
 
 begin
@@ -149,11 +164,11 @@ port map (
 	stall_in => f_stall,
 	wb_in => wb_in_dump,
 
-	--current_PC_out: OUT integer;
+	current_PC_out => d_pc,
 	shamt => d_shamt,
 	op1 => d_op1,
 	op2 => d_op2,
-	--result_index_out: OUT std_logic_vector(4 DOWNTO 0);
+	result_index_out => d_result_index,
 	immediate_32bit => d_immediate,
 	ALU_type => d_alu_type,
 	stall_out => d_stall
@@ -170,12 +185,17 @@ port map(
 
 	shamt => d_shamt,
 	immediate => d_immediate,
+	alu_type => d_alu_type,
+	result_index_in => d_result_index,
+	pc_pointer => d_pc,
 
+	pc_pointer_out => e_pc,
+	alu_type_out => e_alu_type,
 	alu_result => e_alu_result,
-
-	alu_type => d_alu_type
-	--alu_type_out: out std_logic_vector(4 downto 0);
-	
+	branch_taken_in => e_branch_taken,
+	operand2_out => e_operand2,
+	stall_out => e_stall,
+	result_index_out => e_result_index	
 );
 				
 clk_process : process
