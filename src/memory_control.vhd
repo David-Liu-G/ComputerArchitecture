@@ -19,7 +19,7 @@ PORT (clk, m_waitrequest, stall_in: IN STD_LOGIC;
 		m_readbyte: IN STD_LOGIC_VECTOR(7 DOWNTO 0);
 		operand2: IN STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
 		reg_index_in: IN STD_LOGIC_VECTOR(4 DOWNTO 0);
-		reg_write, mem_write, mem_read, mem_to_reg, wb_stall_out, mem_stall_out: OUT STD_LOGIC;
+		reg_write, mem_write, mem_read, mem_to_reg, wb_stall_out, mem_stall_out: OUT STD_LOGIC:= '0';
 		branch_taken_out: OUT INTEGER; 
 		reg_index_out: OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
 		m_writebyte: OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -51,34 +51,38 @@ BEGIN
 			case STATE is
 				when idle =>
 					if(stall_in<='0') then
-					   wb_stall_out<='0' after clock_period;
-						mem_stall_out<='0' after clock_period;
 						if (alu_type="10100") then --lw
 							STATE<=start_read;
+							mem_stall_out<='1';
+							wb_stall_out<='1';
 						elsif (alu_type="10110") then --sw
 							STATE<=start_write;
+							mem_stall_out<='1';
+							wb_stall_out<='1';
 						elsif (alu_type="11000" or alu_type="11001" or alu_type="11010" or alu_type="11011" or alu_type="11100" or alu_type="10101" or alu_type="10111") then --temporary cases, will be expanded later
 							reg_write<='0';
 							mem_to_reg<='0';
+							mem_stall_out<='0';
+							wb_stall_out<='0';
 						else --arithmetic, logical, transfer, and shift ops
 							if(alu_type/="UUUUU") then --eliminate undefined situation
-								reg_write<='1' after clock_period;
-								reg_data<=alu_result after clock_period;
-								reg_index_out<=reg_index_in after clock_period;
-								mem_to_reg<='0' after clock_period;
+								reg_write<='1';
+								reg_data<=alu_result;
+								reg_index_out<=reg_index_in;
+								mem_to_reg<='0';
+								mem_stall_out<='0';
+								wb_stall_out<='0';
 							end if;
 						end if;
 					else
-						wb_stall_out<='1' after clock_period;
-						mem_stall_out<='0' after clock_period;
+						wb_stall_out<='1';
+						mem_stall_out<='0';
 					end if;
 				
 				when start_read =>
 					count<=0;
 					mem_read<='1';
 					mem_write<='0';
-					wb_stall_out<='1' after clock_period;
-					mem_stall_out<='1';
 					buf_block(count)<=m_readbyte;
 					if (m_waitrequest='0') then
 						STATE<=reading;
@@ -104,8 +108,6 @@ BEGIN
 				   count<=0;
 					mem_read<='0';
 					mem_write<='1';
-					wb_stall_out<='1' after clock_period;
-					mem_stall_out<='1';
 					m_writebyte<=operand2(7 downto 0);
 					if (m_waitrequest='0') then
 						STATE<=write1;
@@ -145,8 +147,8 @@ BEGIN
 				when r_termination =>
 					read_data<=buf_block(3)&buf_block(2)&buf_block(1)&buf_block(0);
 					reg_index_out<=reg_index_in;
-					--wb_stall_out<='0';
-					--mem_stall_out<='0';
+					wb_stall_out<='0';
+					mem_stall_out<='0';
 					reg_write<='1';
 					mem_to_reg<='1';
 					mem_read<='0';
@@ -154,8 +156,8 @@ BEGIN
 					
 				when w_termination =>
 					read_data<=(others=>'0');
-					--wb_stall_out<='0';
-					--mem_stall_out<='0';
+					wb_stall_out<='0';
+					mem_stall_out<='0';
 					reg_write<='0';
 					mem_to_reg<='0';
 					STATE<=idle;

@@ -10,7 +10,7 @@ ENTITY ID IS
 	PORT( 
 			clk: IN std_logic;
 			current_PC_in: IN integer;
-			instruction: IN std_logic_vector(31 DOWNTO 0);
+			instruction: IN std_logic_vector(31 DOWNTO 0):=(others=>'0');
 			result_in: IN std_logic_vector(31 DOWNTO 0);
 			result_index_in: IN std_logic_vector(4 DOWNTO 0);
 			current_PC_out: OUT integer;
@@ -197,6 +197,12 @@ ARCHITECTURE behavior OF ID IS
 							ALU_type <= type_jr;
 						ELSIF (opcode = X"03") THEN
 							ALU_type <= type_jal;
+						ELSE 	
+							--NOP
+							op1_index := "00000";
+							op2_index := "00000";
+							result_index_out <=  "00000";
+							ALU_type <= type_add; 	
 						END IF;
 					
 
@@ -216,9 +222,6 @@ ARCHITECTURE behavior OF ID IS
 						
 						op1 <= op1_buff;
 						op2 <= op2_buff;
-						IF((wb_in = '1') AND (NOT(result_index_in = "00000"))) THEN
-						  registers(to_integer(unsigned(result_index_in))) <= result_in;
-						END IF;
 						
 						IF(immediate_16bit(15) = '1') THEN
 							immediate_32bit <= "1111111111111111" & immediate_16bit;
@@ -228,6 +231,13 @@ ARCHITECTURE behavior OF ID IS
 						
 					END IF;
 			END IF;
+		END PROCESS;
+
+		PROCESS(wb_in)
+			BEGIN
+				IF(rising_edge(wb_in) AND (NOT(result_index_in = "00000"))) THEN
+					registers(to_integer(unsigned(result_index_in))) <= result_in;
+				END IF;
 		END PROCESS;
 			
 END behavior;

@@ -17,7 +17,7 @@ PORT ( clk, stall_in: IN STD_LOGIC;
        alu_result: IN STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
 		 operand2: IN STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
 		 reg_index_in: IN STD_LOGIC_VECTOR(4 DOWNTO 0);
-		 reg_write, mem_to_reg, wb_stall_out, mem_stall_out: OUT STD_LOGIC;
+		 reg_write, mem_to_reg, wb_stall_out, mem_stall_out: OUT STD_LOGIC:= '0';
 		 branch_taken_out: OUT INTEGER;
 		 reg_index_out: OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
 		 reg_data: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);

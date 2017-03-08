@@ -1,0 +1,551 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dG:/intelFPGA/16.1
+Edata_memory
+Z0 w1488919822
+Z1 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z4 dC:/Users/PrinceJed/Desktop/ComputerArchitecture/src
+Z5 8C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/data_memory.vhd
+Z6 FC:/Users/PrinceJed/Desktop/ComputerArchitecture/src/data_memory.vhd
+l0
+L6
+VRkB5hghcR8]VJiX?JQ7[L3
+!s100 6dT`5aHDi5P6L]dK2bb101
+Z7 OV;C;10.5b;63
+32
+Z8 !s110 1489010419
+!i10b 1
+Z9 !s108 1489010419.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/data_memory.vhd|
+Z11 !s107 C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/data_memory.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Artl
+R1
+R2
+R3
+DEx4 work 11 data_memory 0 22 RkB5hghcR8]VJiX?JQ7[L3
+l29
+L23
+VP5hC]lhPXG=z1GNlkQO=>3
+!s100 =J7b;XzJDo8B?Yf>=8a:C3
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Eexe
+Z14 w1489004243
+R1
+R2
+R3
+R4
+Z15 8C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\exe.vhd
+Z16 FC:\Users\PrinceJed\Desktop\ComputerArchitecture\src\exe.vhd
+l0
+L5
+V=XNS;M`aPS8[B4WD4E6_:1
+!s100 SJ86alT?6Y1K:S9iP;hDB3
+R7
+32
+R8
+!i10b 1
+R9
+Z17 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\exe.vhd|
+Z18 !s107 C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\exe.vhd|
+!i113 1
+R12
+R13
+Aarch
+R1
+R2
+R3
+DEx4 work 3 exe 0 22 =XNS;M`aPS8[B4WD4E6_:1
+l38
+L33
+V:5X=Q;>F?j=8=UlFOWjh@3
+!s100 W^K7ToYaz0j]1B43c[1o>2
+R7
+32
+R8
+!i10b 1
+R9
+R17
+R18
+!i113 1
+R12
+R13
+Eexe_tb
+Z19 w1488821066
+R1
+R2
+R3
+R4
+Z20 8C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/exe_tb.vhd
+Z21 FC:/Users/PrinceJed/Desktop/ComputerArchitecture/src/exe_tb.vhd
+l0
+L5
+Vl`N0?9E0DQg0YK9JTGCDZ1
+!s100 iHhVjZ];`f[@5;?zcPGT_0
+R7
+32
+Z22 !s110 1488840185
+!i10b 1
+Z23 !s108 1488840184.000000
+Z24 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/exe_tb.vhd|
+Z25 !s107 C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/exe_tb.vhd|
+!i113 1
+R12
+R13
+Abehavior
+R1
+R2
+R3
+DEx4 work 6 exe_tb 0 22 l`N0?9E0DQg0YK9JTGCDZ1
+l42
+L8
+V=g99Lh>XEZ[_UF;ZjGj=U1
+!s100 7o2[7lmjc3l;f4M5f@55Y2
+R7
+32
+R22
+!i10b 1
+R23
+R24
+R25
+!i113 1
+R12
+R13
+Efetch
+R14
+R1
+R2
+R3
+R4
+Z26 8C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/fetch.vhd
+Z27 FC:/Users/PrinceJed/Desktop/ComputerArchitecture/src/fetch.vhd
+l0
+L5
+V=LobKJdbNLU;[nRADhR9N3
+!s100 86lL4@<N6_RlK>W>eO0af3
+R7
+32
+R8
+!i10b 1
+R9
+Z28 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/fetch.vhd|
+Z29 !s107 C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/fetch.vhd|
+!i113 1
+R12
+R13
+Aarch
+R1
+R2
+R3
+DEx4 work 5 fetch 0 22 =LobKJdbNLU;[nRADhR9N3
+l32
+L23
+V_Y`?Uj5ZFm0Qh8cK1@X9[3
+!s100 Bdfk1V=Xm6IMz360V_n9D2
+R7
+32
+R8
+!i10b 1
+R9
+R28
+R29
+!i113 1
+R12
+R13
+Efetch_tb
+Z30 w1488840180
+R1
+R2
+R3
+R4
+Z31 8C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_three_stage_tb.vhd
+Z32 FC:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_three_stage_tb.vhd
+l0
+L5
+VFbljLjZQT3m;?[o><[QcJ0
+!s100 5798[>C<_=<XUaE1Z2MfB0
+R7
+32
+R22
+!i10b 1
+Z33 !s108 1488840185.000000
+Z34 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_three_stage_tb.vhd|
+Z35 !s107 C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_three_stage_tb.vhd|
+!i113 1
+R12
+R13
+Abehavior
+R1
+R2
+R3
+DEx4 work 8 fetch_tb 0 22 FbljLjZQT3m;?[o><[QcJ0
+l112
+L8
+VaKDKbM?2i1?ZaC^eT92E22
+!s100 :[T4BNgWnV15U53>RY@=j2
+R7
+32
+R22
+!i10b 1
+R33
+R34
+R35
+!i113 1
+R12
+R13
+Efive_stage_tb
+Z36 w1489014100
+R1
+R2
+R3
+R4
+Z37 8C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_four_stage_tb.vhd
+Z38 FC:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_four_stage_tb.vhd
+l0
+L5
+VYjI?X>Wb@4N2dm;H35D2E2
+!s100 j?[c<cZ_?R[NURM?zOB`Z0
+R7
+32
+Z39 !s110 1489014640
+!i10b 1
+Z40 !s108 1489014640.000000
+Z41 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_four_stage_tb.vhd|
+Z42 !s107 C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_four_stage_tb.vhd|
+!i113 1
+R12
+R13
+Abehavior
+R1
+R2
+R3
+DEx4 work 13 five_stage_tb 0 22 YjI?X>Wb@4N2dm;H35D2E2
+l168
+L8
+VQd:azGlO=2TNlJ5AC5Ydm2
+!s100 6lOYzTN]5[P_^Dbo6P5Lz0
+R7
+32
+R39
+!i10b 1
+R40
+R41
+R42
+!i113 1
+R12
+R13
+Efour_stage_tb
+Z43 w1489011161
+R1
+R2
+R3
+R4
+R37
+R38
+l0
+L5
+Vf4J?T<z@^eUKNig4zDAPQ2
+!s100 K[lV[_BciUY=6lK`OC?670
+R7
+32
+!s110 1489011164
+!i10b 1
+!s108 1489011164.000000
+R41
+R42
+!i113 1
+R12
+R13
+Abehavior
+R1
+R2
+R3
+DEx4 work 13 four_stage_tb 0 22 f4J?T<z@^eUKNig4zDAPQ2
+l155
+L8
+Vz>JBcj^V`:502V2=TY6ag2
+!s100 <R6EMWbHUaOjjlSSz6_Ro0
+R7
+32
+!s110 1489010591
+!i10b 1
+!s108 1489010591.000000
+R41
+R42
+!i113 1
+R12
+R13
+Eid
+Z44 w1489014768
+R1
+R2
+R3
+R4
+Z45 8C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\id.vhd
+Z46 FC:\Users\PrinceJed\Desktop\ComputerArchitecture\src\id.vhd
+l0
+L5
+VEdJ7h>450dT143F2dJEiY3
+!s100 55?zjJTEHl`EHYAB]aFDL1
+R7
+32
+Z47 !s110 1489014771
+!i10b 1
+Z48 !s108 1489014771.000000
+Z49 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\id.vhd|
+Z50 !s107 C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\id.vhd|
+!i113 1
+R12
+R13
+Abehavior
+R1
+R2
+R3
+Z51 DEx4 work 2 id 0 22 EdJ7h>450dT143F2dJEiY3
+l34
+L27
+V]dGQKWml@Qjc2X@z<GU@@3
+!s100 ab;=C4g5K64DoXFldnb3=3
+R7
+32
+R47
+!i10b 1
+R48
+R49
+R50
+!i113 1
+R12
+R13
+Einstruction_memory
+R14
+R1
+R2
+R3
+R4
+Z52 8C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/instruction_memory.vhd
+Z53 FC:/Users/PrinceJed/Desktop/ComputerArchitecture/src/instruction_memory.vhd
+l0
+L7
+V9=9?D7mXEnE:bJI:bC>fZ0
+!s100 <NaB523QM]QcoN[6C[aoE3
+R7
+32
+Z54 !s110 1489010420
+!i10b 1
+Z55 !s108 1489010420.000000
+Z56 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/instruction_memory.vhd|
+Z57 !s107 C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/instruction_memory.vhd|
+!i113 1
+R12
+R13
+Artl
+R1
+R2
+R3
+DEx4 work 18 instruction_memory 0 22 9=9?D7mXEnE:bJI:bC>fZ0
+l30
+L24
+VjOTgd?m2nOm]i4OBPQ[VB0
+!s100 b]4WWY`dR=`ZE1eIFfF:=3
+R7
+32
+R54
+!i10b 1
+R55
+R56
+R57
+!i113 1
+R12
+R13
+Emem
+Z58 w1489012193
+R1
+Z59 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z60 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+R2
+R3
+R4
+Z61 8C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\mem.vhd
+Z62 FC:\Users\PrinceJed\Desktop\ComputerArchitecture\src\mem.vhd
+l0
+L11
+V=f>>QmbV`Z;RllK_9C7OG1
+!s100 ]zG@hGFl12AWA8ZFc;BNT0
+R7
+32
+Z63 !s110 1489012207
+!i10b 1
+Z64 !s108 1489012207.000000
+Z65 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\mem.vhd|
+Z66 !s107 C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\mem.vhd|
+!i113 1
+R12
+R13
+Astructure
+R1
+R59
+R60
+R2
+R3
+DEx4 work 3 mem 0 22 =f>>QmbV`Z;RllK_9C7OG1
+l71
+L28
+VNaN>Nz8Uh@i0fOj95`eVD3
+!s100 JXEfhKV]3=zIkV022b;K>2
+R7
+32
+R63
+!i10b 1
+R64
+R65
+R66
+!i113 1
+R12
+R13
+Ememory
+Z67 w1488821077
+R1
+R2
+R3
+R4
+Z68 8C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd
+Z69 FC:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd
+l0
+L7
+VTF8h29n45=d:Y]6GOTzi;2
+!s100 ;F`Qn;?jf42zPQP;ZmS8X3
+R7
+32
+Z70 !s110 1488840186
+!i10b 1
+Z71 !s108 1488840186.000000
+Z72 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd|
+Z73 !s107 C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd|
+!i113 1
+R12
+R13
+Artl
+R1
+R2
+R3
+DEx4 work 6 memory 0 22 TF8h29n45=d:Y]6GOTzi;2
+l30
+L24
+VdW2=T0Jz5S@H9Z0IO=Km72
+!s100 [iZD_:<ZZL@VY[FZd4T_a2
+R7
+32
+R70
+!i10b 1
+R71
+R72
+R73
+!i113 1
+R12
+R13
+Ememory_control
+Z74 w1489012158
+R1
+R59
+R60
+R2
+R3
+R4
+Z75 8C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\memory_control.vhd
+Z76 FC:\Users\PrinceJed\Desktop\ComputerArchitecture\src\memory_control.vhd
+l0
+L11
+V4X@3:aR5V`h=`6Yz4a8UA1
+!s100 him[:D4JLdPFETdU;l8:i0
+R7
+32
+Z77 !s110 1489012205
+!i10b 1
+Z78 !s108 1489012205.000000
+Z79 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\memory_control.vhd|
+Z80 !s107 C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\memory_control.vhd|
+!i113 1
+R12
+R13
+Abehavior
+R1
+R59
+R60
+R2
+R3
+DEx4 work 14 memory_control 0 22 4X@3:aR5V`h=`6Yz4a8UA1
+l42
+L32
+Vh1c;3`H;i`bh9Y=YC0nLg0
+!s100 ?:YQV`maHmU[R0_[8kRKm0
+R7
+32
+R77
+!i10b 1
+R78
+R79
+R80
+!i113 1
+R12
+R13
+Ewb
+Z81 w1489013938
+R1
+R2
+R3
+R4
+Z82 8C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\wb.vhd
+Z83 FC:\Users\PrinceJed\Desktop\ComputerArchitecture\src\wb.vhd
+l0
+L5
+VPFVz6OSz^5Cm9Uf_=BB<32
+!s100 lZYJ=fCK^g<=8WTLmVIfG1
+R7
+32
+Z84 !s110 1489013942
+!i10b 1
+Z85 !s108 1489013942.000000
+Z86 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\wb.vhd|
+Z87 !s107 C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\wb.vhd|
+!i113 1
+R12
+R13
+Abeha
+R1
+R2
+R3
+DEx4 work 2 wb 0 22 PFVz6OSz^5Cm9Uf_=BB<32
+l18
+L17
+V?6UNK0D<H@Oi<afoWUomZ2
+!s100 n3_2=IglVk2U0I]WmFGeQ0
+R7
+32
+R84
+!i10b 1
+R85
+R86
+R87
+!i113 1
+R12
+R13
