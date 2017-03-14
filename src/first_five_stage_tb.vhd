@@ -15,11 +15,11 @@ GENERIC(
 );
 PORT (
     clock: IN STD_LOGIC;
-    writedata: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+    writedata: IN STD_LOGIC_VECTOR (31 DOWNTO 0);
     address: IN INTEGER RANGE 0 TO ram_size-1;
     memwrite: IN STD_LOGIC;
     memread: IN STD_LOGIC;
-    readdata: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+    readdata: OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
     waitrequest: OUT STD_LOGIC
 );
 end component;
@@ -31,12 +31,13 @@ generic(
 port(
 	clock : in std_logic;
 	reset : in std_logic;
-
+	
+	stall_in : in std_logic;
 	stall : out std_logic;
 	instruction : out std_logic_vector (31 downto 0);
   
   	m_waitrequest : in std_logic;
-	m_readdata : in std_logic_vector (7 downto 0);
+	m_readdata : in std_logic_vector (31 downto 0);
 	m_read : out std_logic;
   	m_addr : out integer range 0 to ram_size-1
 );
@@ -117,17 +118,18 @@ port(	     clk: IN STD_LOGIC;
 END COMPONENT;
 	
 -- test signals 
-signal f_reset : std_logic := '0';
+signal f_reset : std_logic := '1';
 signal clk : std_logic := '0';
 constant clk_period : time := 1 ns;
 
 signal m_addr : integer range 0 to 2147483647;
 signal m_read : std_logic;
-signal m_readdata : std_logic_vector (7 downto 0);
+signal m_readdata : std_logic_vector (31 downto 0);
 signal m_write : std_logic;
-signal m_writedata : std_logic_vector (7 downto 0);
+signal m_writedata : std_logic_vector (31 downto 0);
 signal m_waitrequest : std_logic;
 
+signal f_stall_in : std_logic := '0';
 signal f_stall : std_logic := '1';
 signal f_instruction : std_logic_vector (31 downto 0);
 
@@ -190,6 +192,7 @@ port map(
 
 --    stall => mem_stall,
 --    change to the previous one, once the stall in fectch get done
+    stall_in => f_stall_in,
     stall => f_stall,
     instruction => f_instruction,
 
@@ -280,9 +283,9 @@ port map (clk =>clk,
 				
 clk_process : process
 begin
-  clk <= '0';
-  wait for clk_period/2;
   clk <= '1';
+  wait for clk_period/2;
+  clk <= '0';
   wait for clk_period/2;
 end process;
 
@@ -291,53 +294,38 @@ begin
 
 -- put your tests here
 --wait for mem setup
-wait for 20*clk_period;
+wait for 2*clk_period;
+wait until (clk = '1');
 
-f_reset <= '1';
-wait for clk_period;
 f_reset <= '0';
+wait for 1.1 * clk_period;
 
-wait until (f_stall'event and f_stall = '0');
-wait for clk_period;
 assert (f_instruction = X"00432820") severity error;
-report "fetch finished";
-wait for 1.1*clk_period;
+report "1fetch finished";
+
+wait for clk_period;
+
+assert (f_instruction = X"00E83020") severity error;
+report "2fetch finished";
+
+wait for clk_period;
+
+assert (f_instruction = X"01242022") severity error;
+report "3fetch finished";
 assert (to_integer(signed(e_alu_result)) = 64) severity error;
 report "get result";
 
-wait until (f_stall'event and f_stall = '0');
 wait for clk_period;
-assert (f_instruction = X"00E83020") severity error;
-report "fetch finished";
-wait for 1.1*clk_period;
+
 assert (to_integer(signed(e_alu_result)) = 66) severity error;
 report "get result";
 
-wait until (f_stall'event and f_stall = '0');
 wait for clk_period;
-assert (f_instruction = X"01242022") severity error;
-report "fetch finished";
-wait for 1.1*clk_period;
+
 assert (to_integer(signed(e_alu_result)) = -44) severity error;
 report "get result";
 
-wait until (f_stall'event and f_stall = '0');
-wait for clk_period;
-assert (f_instruction = X"AC010000") severity error;
-report "fetch finished";
-wait for 1.1*clk_period;
-assert (to_integer(signed(e_alu_result)) = 0) severity error;
-assert (to_integer(signed(e_operand2)) = 5) severity error;
-report "get result, calculated address";
-
-wait until (f_stall'event and f_stall = '0');
-wait for clk_period;
-assert (f_instruction = X"8C0A0000") severity error;
-report "fetch finished";
-wait for 1.1*clk_period;
-assert (to_integer(signed(e_alu_result)) = 0) severity error;
-assert (to_integer(signed(e_result_index)) = 10) severity error;
-report "get result, calculated address";
+wait;
 
 wait;
 end process;
