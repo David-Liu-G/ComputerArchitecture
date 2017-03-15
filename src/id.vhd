@@ -20,11 +20,21 @@ ENTITY ID IS
 			immediate_32bit: OUT std_logic_vector(31 DOWNTO 0);
 			ALU_type: OUT std_logic_vector(4 DOWNTO 0);
 			stall_in,wb_in: IN std_logic;
-			stall_out: OUT std_logic
+			stall_out: OUT std_logic;
+			flush: IN std_logic;
+			jump_addr: OUT std_logic_vector(25 DOWNTO 0);
+			exe_forward_valid, mem_forward_valid: IN std_logic;
+			exe_forward_index, mem_forward_index: IN std_logic_vector(4 DOWNTO 0);
+			exe_data_to_forward, mem_data_to_forward: IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+			op1_index_out,op2_index_out: OUT std_logic_vector(4 DOWNTO 0):=(others=>'0');
+			need_stall_dectection: OUT std_logic_vector(1 DOWNTO 0) :="00" --first represents op1, second represents op2
 		);
 END ID;
 
 ARCHITECTURE behavior OF ID IS
+	--SIGNAL op1_temp,op2_temp: std_logic_vector(31 DOWNTO 0);
+	SIGNAL op1_index_temp,op2_index_temp: std_logic_vector(4 DOWNTO 0):=(others=>'0');
+	SIGNAL ALU_type_temp,result_index_out_temp: std_logic_vector(4 DOWNTO 0);
 	TYPE register_file IS ARRAY(register_number-1 DOWNTO 1) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
 	SIGNAL registers: register_file:= (X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",
 	                                   X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",
@@ -35,11 +45,11 @@ ARCHITECTURE behavior OF ID IS
 		ID_PROCESS: PROCESS (clk)
 			
 			VARIABLE immediate_16bit: std_logic_vector(15 DOWNTO 0);
-			VARIABLE op1_index,op2_index:  std_logic_vector(4 DOWNTO 0);
+			VARIABLE op1_index,op2_index:  std_logic_vector(4 DOWNTO 0):=(others=>'0');
 			VARIABLE opcode,funct: std_logic_vector(7 DOWNTO 0);
 			VARIABLE rs,rt,rd: std_logic_vector(4 DOWNTO 0);
 			VARIABLE address: std_logic_vector(25 DOWNTO 0);
-			VARIABLE op1_buff,op2_buff,result_buff: std_logic_vector(31 DOWNTO 0);
+			VARIABLE result_buff: std_logic_vector(31 DOWNTO 0);
 			
 			CONSTANT type_add: std_logic_vector(4 DOWNTO 0):= 			"00000";
 			CONSTANT type_sub: std_logic_vector(4 DOWNTO 0):= 			"00001";
@@ -77,10 +87,10 @@ ARCHITECTURE behavior OF ID IS
 					IF(stall_in = '1') THEN
 						stall_out <= '1';
 					else
-					
 						stall_out <= '0';
 						current_PC_out <= current_PC_in;
 						shamt <= instruction(10 DOWNTO 6);
+						jump_addr <= instruction(25 DOWNTO 0);
 						
 						opcode := ("00"&instruction(31 DOWNTO 26));
 						rs := instruction(25 DOWNTO 21);
@@ -88,140 +98,154 @@ ARCHITECTURE behavior OF ID IS
 						rd := instruction(15 DOWNTO 11);
 						funct := ("00"&instruction(5 DOWNTO 0));
 						immediate_16bit := instruction(15 DOWNTO 0);
-						address := instruction(25 DOWNTO 0);
 						
 						IF (opcode = X"00" AND funct = X"20") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							result_index_out <=  rd; 	
-							ALU_type <= type_add;
+							result_index_out_temp <=  rd; 	
+							ALU_type_temp <= type_add;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"00" AND funct = X"22") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							result_index_out <=  rd; 
-							ALU_type <= type_sub;
+							result_index_out_temp <=  rd; 
+							ALU_type_temp <= type_sub;	
+							need_stall_dectection <= "11";							
 						ELSIF (opcode = X"08") THEN
 							op1_index :=  rs;
-							result_index_out <=  rt; 	
-							ALU_type <= type_addi;
+							result_index_out_temp <=  rt; 	
+							ALU_type_temp <= type_addi;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"00" AND funct = X"18") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							ALU_type <= type_mult;
+							ALU_type_temp <= type_mult;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"00" AND funct = X"1A") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;	
-							ALU_type <= type_div;
+							ALU_type_temp <= type_div;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"00" AND funct = X"2A") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							result_index_out <=  rd; 	
-							ALU_type <= type_slt;
+							result_index_out_temp <=  rd; 	
+							ALU_type_temp <= type_slt;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"0A") THEN
 							op1_index :=  rs;
-							result_index_out <= rt; 
-							ALU_type <= type_slti;
+							result_index_out_temp <= rt; 
+							ALU_type_temp <= type_slti;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"00" AND funct = X"24") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							result_index_out <=  rd; 	
-							ALU_type <= type_and;
+							result_index_out_temp <=  rd; 	
+							ALU_type_temp <= type_and;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"00" AND funct = X"25") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							result_index_out <=  rd; 
-							ALU_type <= type_or;
+							result_index_out_temp <=  rd; 
+							ALU_type_temp <= type_or;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"00" AND funct = X"27") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							result_index_out <=  rd;  	
-							ALU_type <= type_nor;
+							result_index_out_temp <=  rd;  	
+							ALU_type_temp <= type_nor;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"00" AND funct = X"26") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							result_index_out <=  rd;  	
-							ALU_type <= type_xor;
+							result_index_out_temp <=  rd;  	
+							ALU_type_temp <= type_xor;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"0C") THEN
 							op1_index :=  rs;
-							result_index_out <= rt; 	
-							ALU_type <= type_andi;
+							result_index_out_temp <= rt; 	
+							ALU_type_temp <= type_andi;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"0D") THEN
 							op1_index :=  rs;
-							result_index_out <= rt; 	
-							ALU_type <= type_ori;
+							result_index_out_temp <= rt; 	
+							ALU_type_temp <= type_ori;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"0E") THEN
 							op1_index :=  rs;
-							result_index_out <= rt;  	
-							ALU_type <= type_xori;
+							result_index_out_temp <= rt;  	
+							ALU_type_temp <= type_xori;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"00" AND funct = X"10") THEN
-							result_index_out <=  rd;
-							ALU_type <= type_mfhi;
+							result_index_out_temp <=  rd;
+							ALU_type_temp <= type_mfhi;
+							need_stall_dectection <= "00";
 						ELSIF (opcode = X"00" AND funct = X"12") THEN
-							result_index_out <=  rd;	
-							ALU_type <= type_mflo;
+							result_index_out_temp <=  rd;	
+							ALU_type_temp <= type_mflo;
+							need_stall_dectection <= "00";
 						ELSIF (opcode = X"0F") THEN
-							result_index_out <=  rt;
-							ALU_type <= type_lui;
+							result_index_out_temp <=  rt;
+							ALU_type_temp <= type_lui;
+							need_stall_dectection <= "00";
 						ELSIF (opcode = X"00" AND funct = X"00") THEN
 							op1_index :=  rt; 
-							result_index_out <=  rd;
-							ALU_type <= type_sll;
+							result_index_out_temp <=  rd;
+							ALU_type_temp <= type_sll;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"00" AND funct = X"02") THEN
 							op1_index :=  rt; 
-							result_index_out <=  rd;
-							ALU_type <= type_srl;
+							result_index_out_temp <=  rd;
+							ALU_type_temp <= type_srl;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"00" AND funct = X"03") THEN
 							op1_index :=  rt; 
-							result_index_out <=  rd; 	
-							ALU_type <= type_sra;
+							result_index_out_temp <=  rd; 	
+							ALU_type_temp <= type_sra;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"23") THEN
 							op1_index :=  rs;
-							result_index_out <=  rt;
-							ALU_type <= type_lw;
+							result_index_out_temp <=  rt;
+							ALU_type_temp <= type_lw;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"2B") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
-							ALU_type <= type_sw;
+							ALU_type_temp <= type_sw;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"04") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;	
-							ALU_type <= type_beq;
+							ALU_type_temp <= type_beq;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"05") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;		
-							ALU_type <= type_bne;
+							ALU_type_temp <= type_bne;
+							need_stall_dectection <= "11";
 						ELSIF (opcode = X"02") THEN	
-							ALU_type <= type_j;
+							ALU_type_temp <= type_j;
+							need_stall_dectection <= "00";
 						ELSIF (opcode = X"00" AND funct = X"08") THEN
 							op1_index :=  rs;	
-							ALU_type <= type_jr;
+							ALU_type_temp <= type_jr;
+							need_stall_dectection <= "10";
 						ELSIF (opcode = X"03") THEN
-							ALU_type <= type_jal;
+							ALU_type_temp <= type_jal;
+							need_stall_dectection <= "00";
 						ELSE 	
 							--NOP
 							op1_index := "00000";
 							op2_index := "00000";
-							result_index_out <=  "00000";
-							ALU_type <= type_add; 	
+							result_index_out_temp <=  "00000";
+							ALU_type_temp <= type_add; 	
+							need_stall_dectection <= "00";
 						END IF;
-					
-
-						IF((op1_index = "00000") AND (op2_index = "00000")) THEN
-							op1_buff := (others => '0');
-							op2_buff := (others => '0');
-						ELSIF (op1_index = "00000") THEN
-							op1_buff := (others => '0');
-							op2_buff := registers(to_integer(unsigned(op2_index)));
-						ELSIF (op2_index = "00000") THEN 
-							op1_buff := registers(to_integer(unsigned(op1_index)));
-							op2_buff := (others => '0');
-						ELSE 
-							op1_buff := registers(to_integer(unsigned(op1_index)));
-							op2_buff := registers(to_integer(unsigned(op2_index)));
-						END IF;	
 						
-						op1 <= op1_buff;
-						op2 <= op2_buff;
+						op1_index_out <= op1_index;
+						op2_index_out <= op2_index;
+						op1_index_temp <= op1_index;
+						op2_index_temp <= op2_index;
 						
 						IF(immediate_16bit(15) = '1') THEN
 							immediate_32bit <= "1111111111111111" & immediate_16bit;
@@ -239,6 +263,25 @@ ARCHITECTURE behavior OF ID IS
 					registers(to_integer(unsigned(result_index_in))) <= result_in;
 				END IF;
 		END PROCESS;
+
+		op1 <=	(others=>'0') when flush = '1' else
+			exe_data_to_forward when (exe_forward_valid = '1' and exe_forward_index = op1_index_temp) else
+			mem_data_to_forward when (mem_forward_valid = '1' and mem_forward_index = op1_index_temp) else
+		        (others=>'0') when op1_index_temp = "00000" else
+			registers(to_integer(unsigned(op1_index_temp))); 
+
+		op2 <=	(others=>'0') when flush = '1' else
+			exe_data_to_forward when (exe_forward_valid = '1' and exe_forward_index = op2_index_temp) else
+			mem_data_to_forward when (mem_forward_valid = '1' and mem_forward_index = op2_index_temp) else
+		        (others=>'0') when op2_index_temp = "00000" else
+			registers(to_integer(unsigned(op2_index_temp)));
+
+		result_index_out <= result_index_out_temp when flush = '0' else
+		        (others=>'0'); 
+
+		ALU_type <= ALU_type_temp when flush = '0' else
+		        (others=>'0'); 
+												
 			
 END behavior;
 		

@@ -39,7 +39,10 @@ port(
   	m_waitrequest : in std_logic;
 	m_readdata : in std_logic_vector (31 downto 0);
 	m_read : out std_logic;
-  	m_addr : out integer range 0 to ram_size-1
+  	m_addr : out integer range 0 to ram_size-1;
+	flush: IN std_logic;
+	pc_in: IN integer range 0 to ram_size-1;
+	pc_out: OUT integer range 0 to ram_size-1
 );
 end component;
 
@@ -58,7 +61,14 @@ port(
 	result_index_out: OUT std_logic_vector(4 DOWNTO 0);
 	immediate_32bit: OUT std_logic_vector(31 DOWNTO 0);
 	ALU_type: OUT std_logic_vector(4 DOWNTO 0);
-	stall_out: OUT std_logic
+	stall_out: OUT std_logic;
+	flush: IN std_logic;
+	jump_addr: OUT std_logic_vector(25 DOWNTO 0);
+	exe_forward_valid, mem_forward_valid: IN std_logic;
+	exe_forward_index, mem_forward_index: IN std_logic_vector(4 DOWNTO 0);
+	exe_data_to_forward, mem_data_to_forward: IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+	op1_index_out,op2_index_out: OUT std_logic_vector(4 DOWNTO 0);
+	need_stall_dectection: OUT std_logic_vector(1 DOWNTO 0) 
 );
 end component;
 
@@ -77,32 +87,45 @@ port(
 	alu_type : in std_logic_vector(4 downto 0);
 	result_index_in : in std_logic_vector(4 downto 0);
 	pc_pointer : in integer;
-
+	current_pc_for_jal : out integer;
 	pc_pointer_out : out integer;
 	alu_type_out: out std_logic_vector(4 downto 0);
 	alu_result : out std_logic_vector (31 downto 0);
-	branch_taken_in: out integer;
+	
 	operand2_out : out std_logic_vector (31 downto 0);
 	stall_out : out std_logic;
-	result_index_out : out std_logic_vector(4 downto 0)
+	result_index_out : out std_logic_vector(4 downto 0);
+	flush: OUT std_logic;
+	jump_addr: IN std_logic_vector(25 DOWNTO 0);
+	exe_forward_valid,load_hazard: OUT std_logic;
+	load_forward: IN std_logic;
+	op1_index,op2_index: IN std_logic_vector(4 DOWNTO 0);
+	need_stall_dectection: IN std_logic_vector(1 DOWNTO 0);
+	load_data:IN std_logic_vector (31 downto 0);
+	load_index: IN std_logic_vector (4 downto 0)
 );
 end component;
 
-COMPONENT mem IS
+COMPONENT mem2 IS
 GENERIC(DATA_WIDTH: INTEGER:=32;
         RAM_SIZE : INTEGER := 32768);
-PORT ( clk, stall_in: IN STD_LOGIC;
-       branch_taken_in: IN INTEGER;
-       alu_type: IN STD_LOGIC_VECTOR(4 DOWNTO 0);
-       alu_result: IN STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
-		 operand2: IN STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
-		 reg_index_in: IN STD_LOGIC_VECTOR(4 DOWNTO 0);
-		 reg_write, mem_to_reg, wb_stall_out, mem_stall_out: OUT STD_LOGIC;
-		 branch_taken_out: OUT INTEGER;
-		 reg_index_out: OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
-		 reg_data: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
-		 read_data: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
-		 data_m_waitrequest: OUT STD_LOGIC);
+PORT (  clk, stall_in: IN STD_LOGIC;
+       
+        alu_type: IN STD_LOGIC_VECTOR(4 DOWNTO 0);
+        alu_result: IN STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
+	operand2: IN STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
+	wb_index_in: IN STD_LOGIC_VECTOR(4 DOWNTO 0);
+	is_load, need_wb, stall_out: OUT STD_LOGIC:= '0';
+	current_pc_for_jal : in integer;
+	wb_index_out: OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
+	wb_data_out: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
+	read_data: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
+	mem_forward_valid: OUT std_logic:= '0';
+	exe_forward_valid: IN std_logic;
+	mem_data_to_forward: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
+	load_hazard: IN std_logic:= '0';
+	 load_forward: OUT std_logic :='0'
+	);
 END COMPONENT;
 
 COMPONENT wb IS
@@ -129,14 +152,9 @@ signal m_write : std_logic;
 signal m_writedata : std_logic_vector (31 downto 0);
 signal m_waitrequest : std_logic;
 
-signal f_stall_in : std_logic := '0';
 signal f_stall : std_logic := '1';
 signal f_instruction : std_logic_vector (31 downto 0);
-
-signal pc_dump : integer;
-signal result_in_dump : std_logic_vector(31 downto 0);
-signal result_index_in_dump : std_logic_vector(4 downto 0);
-signal wb_in_dump : std_logic;
+signal f_pc_out : integer:= 0;
 
 signal d_shamt : std_logic_vector(4 downto 0);
 signal d_op1, d_op2: std_logic_vector(31 downto 0);
@@ -145,14 +163,19 @@ signal d_alu_type : std_logic_vector(4 downto 0);
 signal d_stall : std_logic := '1';
 signal d_pc : integer;
 signal d_result_index : std_logic_vector(4 downto 0);
+signal d_jump_addr: std_logic_vector(25 downto 0);
+signal d_op1_index,d_op2_index: std_logic_vector(4 DOWNTO 0):="00000";
+signal d_need_stall_dectection: std_logic_vector(1 DOWNTO 0):= "00";
 
 signal e_alu_result : std_logic_vector (31 downto 0);
-signal e_pc : integer;
 signal e_alu_type : std_logic_vector(4 downto 0);
-signal e_branch_taken : integer;
 signal e_operand2 : std_logic_vector(31 downto 0);
 signal e_stall : std_logic;
 signal e_result_index : std_logic_vector(4 downto 0);
+signal e_flush: std_logic := '0';
+signal e_pc_out: integer:= 0;
+signal e_current_pc_for_jal: integer:= 0;
+signal e_forward_valid: std_logic:= '0';
 
 signal mem_stall : std_logic := '0';
 signal mem_data_m_waitrequest : std_logic;
@@ -160,19 +183,23 @@ signal reg_write, mem_to_reg : std_logic;
 signal mem_read_data : std_logic_vector(31 downto 0);
 signal mem_reg_data : std_logic_vector(31 downto 0);
 signal mem_reg_index_out : std_logic_vector(4 downto 0);
-signal mem_branch_taken_out : integer;
+signal mem_forward_valid: std_logic:= '0';
+signal mem_data_to_forward : std_logic_vector(31 downto 0);
+signal mem_load_forward: std_logic:='0';
+signal mem_load_index: std_logic_vector (4 downto 0);
 
 signal wb_stall_in : std_logic;
+signal wb_result_in : std_logic_vector(31 downto 0);
+signal wb_result_index_in : std_logic_vector(4 downto 0);
+signal wb_in_dump : std_logic;
 
-signal f_or_m_stall: std_logic:= '1';
-signal d_or_m_stall: std_logic:= '1';
+signal load_hazard: std_logic:= '0';
+
 
 begin
 
 -- Connect the components which we instantiated above to their
 -- respective signals.
-f_or_m_stall <= f_stall or mem_stall;
-d_or_m_stall <= d_stall or mem_stall;
 
 ins_mem : instruction_memory
 port map (
@@ -190,26 +217,28 @@ port map(
     clock => clk,
     reset => f_reset,
 
---    stall => mem_stall,
---    change to the previous one, once the stall in fectch get done
-    stall_in => f_stall_in,
     stall => f_stall,
+
+    stall_in => load_hazard,
     instruction => f_instruction,
 
     m_addr => m_addr,
     m_read => m_read,
     m_readdata => m_readdata,
-    m_waitrequest => m_waitrequest
+    m_waitrequest => m_waitrequest,
+	flush => e_flush,
+	pc_in => e_pc_out,
+	pc_out => f_pc_out
 );
 
 dec: ID
 port map (
 	clk => clk,
-	current_PC_in => pc_dump,
+	current_PC_in => f_pc_out,
 	instruction => f_instruction,
-	result_in => result_in_dump,
-	result_index_in => result_index_in_dump,
-	stall_in => f_or_m_stall,
+	result_in => wb_result_in,
+	result_index_in => wb_result_index_in,
+	stall_in => f_stall,
 	wb_in => wb_in_dump,
 
 	current_PC_out => d_pc,
@@ -219,14 +248,25 @@ port map (
 	result_index_out => d_result_index,
 	immediate_32bit => d_immediate,
 	ALU_type => d_alu_type,
-	stall_out => d_stall
+	stall_out => d_stall,
+	flush => e_flush,
+	jump_addr => d_jump_addr,
+	exe_forward_valid => e_forward_valid, 
+	mem_forward_valid => mem_forward_valid, 
+	exe_forward_index => e_result_index, 
+	mem_forward_index => mem_reg_index_out,
+	exe_data_to_forward => e_alu_result, 
+	mem_data_to_forward => mem_data_to_forward,
+	op1_index_out => d_op1_index,
+	op2_index_out => d_op2_index,
+	need_stall_dectection => d_need_stall_dectection
 );
 
 ex: exe
 port map(
 	clock => clk,
 		
-	stall => d_or_m_stall,
+	stall => d_stall,
 
 	operand1 => d_op1,
 	operand2 => d_op2,
@@ -236,38 +276,48 @@ port map(
 	alu_type => d_alu_type,
 	result_index_in => d_result_index,
 	pc_pointer => d_pc,
-
-	pc_pointer_out => e_pc,
+	current_pc_for_jal => e_current_pc_for_jal,
+	pc_pointer_out => e_pc_out,
 	alu_type_out => e_alu_type,
 	alu_result => e_alu_result,
-	branch_taken_in => e_branch_taken,
 	operand2_out => e_operand2,
 	stall_out => e_stall,
-	result_index_out => e_result_index	
+	result_index_out => e_result_index,
+
+	flush => e_flush,
+	jump_addr => d_jump_addr,
+
+	exe_forward_valid => e_forward_valid,
+	load_hazard => load_hazard,
+	load_forward => mem_load_forward,
+	op1_index => d_op1_index,
+	op2_index => d_op2_index,
+	need_stall_dectection => d_need_stall_dectection,
+	load_data => mem_data_to_forward,
+	load_index => mem_reg_index_out
 );
 
-meme: mem
-port map(
-	clk => clk,
-	
+meme: mem2
+PORT MAP(  clk => clk,
 	stall_in => e_stall,
-	branch_taken_in => e_branch_taken,
-	alu_type => e_alu_type,
+
+        alu_type => e_alu_type,
 	alu_result => e_alu_result,
 	operand2 => e_operand2,
-	reg_index_in => e_result_index,
-	
-	reg_write => reg_write, 
-	mem_to_reg => mem_to_reg, 
-	mem_stall_out => mem_stall,
-	branch_taken_out => mem_branch_taken_out,
-	reg_index_out => mem_reg_index_out,
-	reg_data => mem_reg_data,
+	wb_index_in => e_result_index,
+	need_wb => reg_write,
+	is_load => mem_to_reg,
+	stall_out => wb_stall_in,
+	current_pc_for_jal => e_current_pc_for_jal,
+	wb_index_out => mem_reg_index_out,
+	wb_data_out => mem_reg_data,
 	read_data => mem_read_data,
-	data_m_waitrequest => mem_data_m_waitrequest,
-	
-	wb_stall_out => wb_stall_in
-); 
+	mem_forward_valid => mem_forward_valid,
+	exe_forward_valid => e_forward_valid,
+	mem_data_to_forward =>mem_data_to_forward,
+	load_hazard => load_hazard,
+	 load_forward => mem_load_forward
+	);
 
 writeback: wb
 port map (clk =>clk,
@@ -277,8 +327,8 @@ port map (clk =>clk,
 	  reg_write_in => reg_write, 	  mem_to_reg => mem_to_reg, 
 	  wb_stall_in => wb_stall_in,
 	  reg_write_out => wb_in_dump,
-          reg_index_out => result_index_in_dump,
-	  data_out => result_in_dump
+          reg_index_out => wb_result_index_in,
+	  data_out => wb_result_in
 	  );
 				
 clk_process : process

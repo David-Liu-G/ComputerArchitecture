@@ -18,15 +18,24 @@ port(
 	
 	result_index_in : in std_logic_vector(4 downto 0);
 
-	pc_pointer : in integer;
-	pc_pointer_out : out integer;
+	pc_pointer : in integer:=0;
+	current_pc_for_jal : out integer:=0;
+	pc_pointer_out : out integer:=0;
 
 	alu_type_out: out std_logic_vector(4 downto 0);
 	alu_result : out std_logic_vector (31 downto 0);
-	branch_taken_in: out integer;
+	
 	operand2_out : out std_logic_vector (31 downto 0);
 	stall_out : out std_logic;
-	result_index_out : out std_logic_vector(4 downto 0)
+	result_index_out : out std_logic_vector(4 downto 0);
+	flush: OUT std_logic:= '0';
+	jump_addr: IN std_logic_vector(25 DOWNTO 0);
+	exe_forward_valid,load_hazard: OUT std_logic:= '0';
+	load_forward: IN std_logic;
+	op1_index,op2_index: IN std_logic_vector(4 DOWNTO 0):=(others=>'0');
+	need_stall_dectection: IN std_logic_vector(1 DOWNTO 0) := "00"; --first represents op1, second represents op2
+	load_data:IN std_logic_vector (31 downto 0);
+	load_index: IN std_logic_vector (4 downto 0)
 );
 end exe;
 
@@ -34,9 +43,10 @@ architecture arch of exe is
 
 signal hi_part : std_logic_vector (31 downto 0);
 signal low_part : std_logic_vector (31 downto 0);
+signal op1_index_delay,op2_index_delay,alu_type_delay, result_index_in_delay: std_logic_vector (4 downto 0):=(others=>'0');
 
 begin
-clock_process: process (clock)
+clock_process: process (clock, load_forward)
 	variable sign_operand1 : integer;
 	variable sign_operand2 : integer;
 	variable sign_result : integer;
@@ -48,7 +58,9 @@ clock_process: process (clock)
 
 	variable big_buffer: std_logic_vector (63 downto 0);
 begin
-	if (clock'event and clock = '1') then
+	if (clock'event and clock = '1')or(rising_edge(load_forward)) then
+		current_pc_for_jal <= pc_pointer;
+		
 		sign_operand1 := to_integer(signed(operand1));
 		sign_operand2 := to_integer(signed(operand2));
 
@@ -57,15 +69,41 @@ begin
 
 		instruction_type := to_integer(unsigned(alu_type));
 
+		if(load_forward= '1') then 
+			if(op1_index_delay = load_index) then
+				sign_operand1 := to_integer(signed(load_data));
+			end if;
+			if(op2_index_delay = load_index) then
+				sign_operand2 := to_integer(signed(load_data));
+			end if;
+		end if;
+
+		flush <= '0';
+
 		if (stall = '1') then
 			sign_result := 0;
 			stall_out <= '1';
 			alu_result <= std_logic_vector(to_signed(sign_result, 32));
-		else
+		
+		else	
 			alu_type_out <= alu_type;
 			operand2_out <= operand2;
 			stall_out <= '0';
 			result_index_out <= result_index_in;
+
+			if (alu_type="10100" OR alu_type="10110" OR alu_type="11000" 
+			or alu_type="11001" or alu_type="11010" or alu_type="11011" 
+			or alu_type="10101" or alu_type="10111" or alu_type="UUUUU" ) then --lw,sw, jump/branch, reserverd				
+				exe_forward_valid <= '0';
+			else  --jal, arithmetic
+				exe_forward_valid <= '1';
+			end if;
+
+			alu_type_delay <= alu_type;
+			result_index_in_delay <= result_index_in;
+			op1_index_delay <= op1_index;
+			op2_index_delay <= op2_index;
+		
 			if (instruction_type = 0) then --add
 				sign_result := sign_operand1 + sign_operand2;
 				alu_result <= std_logic_vector(to_signed(sign_result, 32));
@@ -126,21 +164,41 @@ begin
 			elsif (instruction_type = 19) then --shift right arithmetic
 				alu_result <= std_logic_vector(shift_right(signed(operand1), sign_shamt));
 			elsif (instruction_type = 20) then --load word, calculating address
-            sign_result := sign_operand1 + sign_immediate;
+            			sign_result := sign_operand1 + sign_immediate;
 				alu_result <= std_logic_vector(to_signed(sign_result, 32));
 			elsif (instruction_type = 21) then --reserved 1
 			elsif (instruction_type = 22) then --store word, calculating address
-            sign_result := sign_operand1 + sign_immediate;
+            			sign_result := sign_operand1 + sign_immediate;
 				alu_result <= std_logic_vector(to_signed(sign_result, 32));
 			elsif (instruction_type = 23) then --reserved 2
 			elsif (instruction_type = 24) then --branch on equal
+				if(sign_operand1 = sign_operand2) then
+					flush <= '1';
+					pc_pointer_out <= pc_pointer + sign_immediate;
+				end if;
 			elsif (instruction_type = 25) then --branch on not equal
+				if(not(sign_operand1 = sign_operand2)) then
+					flush <= '1';
+					pc_pointer_out <= pc_pointer + sign_immediate;
+				end if;
 			elsif (instruction_type = 26) then --jump
+				flush <= '1';
+				pc_pointer_out <= to_integer(unsigned(jump_addr));
 			elsif (instruction_type = 27) then --jump register
+				flush <= '1';
+				pc_pointer_out <= sign_operand1;
 			elsif (instruction_type = 28) then --jump and link
+				flush <= '1';
+				pc_pointer_out <= to_integer(unsigned(jump_addr));
 			end if;
 		end if;
+
 	end if;
 end process;
+
+
+load_hazard <= '1' when ((alu_type_delay = "10100") and (need_stall_dectection(1) = '1') and (op1_index = result_index_in_delay)) else
+		'1' when ((alu_type_delay = "10100") and (need_stall_dectection(0) = '1') and (op2_index = result_index_in_delay)) else
+		'0';
 	
 end architecture;

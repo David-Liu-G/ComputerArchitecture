@@ -7,37 +7,37 @@ z2
 !i10e 25
 !i10f 100
 cModel Technology
-dG:/intelFPGA/16.1
+dC:/Users/PrinceJed/Desktop/ComputerArchitecture/src
 Edata_memory
-Z0 w1489503477
+Z0 w1489674875
 Z1 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
 Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
 Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
-Z4 dC:/Users/david/workspace/project_computer/ComputerArchitecture/src
-Z5 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/data_memory.vhd
-Z6 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/data_memory.vhd
+Z4 d//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src
+Z5 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/data_memory.vhd
+Z6 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/data_memory.vhd
 l0
 L6
-Vd^E:0]<0F;QC2jNK7dh6f2
+VOl7lnVWSiIP^AN@D@J@WM0
 !s100 6dT`5aHDi5P6L]dK2bb101
-Z7 OP;C;10.4a;61
+Z7 OV;C;10.3d;59
 32
-Z8 !s110 1489521406
+Z8 !s110 1489780317
 !i10b 1
-Z9 !s108 1489521406.000000
-Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/data_memory.vhd|
-Z11 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/data_memory.vhd|
+Z9 !s108 1489780317.605000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/data_memory.vhd|
+Z11 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/data_memory.vhd|
 !i113 1
-Z12 o-work work -2002 -explicit -O0
+Z12 o-work work -2002 -explicit
 Z13 tExplicit 1
 Artl
 R1
 R2
 R3
-DEx4 work 11 data_memory 0 22 d^E:0]<0F;QC2jNK7dh6f2
+DEx4 work 11 data_memory 0 22 Ol7lnVWSiIP^AN@D@J@WM0
 l29
 L23
-V3U]GTAL6cEjO?FWzDW@@l2
+V12XbAV937dIgK5Vh<i`Ce3
 !s100 =J7b;XzJDo8B?Yf>=8a:C3
 R7
 32
@@ -50,24 +50,24 @@ R11
 R12
 R13
 Eexe
-R0
+Z14 w1489782187
 R1
 R2
 R3
 R4
-Z14 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/exe.vhd
-Z15 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/exe.vhd
+Z15 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/exe.vhd
+Z16 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/exe.vhd
 l0
 L5
-V;R^CYg1GcZ=6AOWSl1B`I0
-!s100 SJ86alT?6Y1K:S9iP;hDB3
+VlC98Kb6eA>cdm`cik58Wz1
+!s100 kI8PN_zbRM[3hejhJzg861
 R7
 32
-Z16 !s110 1489521407
+Z17 !s110 1489782192
 !i10b 1
-Z17 !s108 1489521407.000000
-Z18 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/exe.vhd|
-Z19 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/exe.vhd|
+Z18 !s108 1489782192.477000
+Z19 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/exe.vhd|
+Z20 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/exe.vhd|
 !i113 1
 R12
 R13
@@ -75,40 +75,40 @@ Aarch
 R1
 R2
 R3
-DEx4 work 3 exe 0 22 ;R^CYg1GcZ=6AOWSl1B`I0
-l38
-L33
-V38UC3JDQzOk9Fa[i5CK8;0
-!s100 W^K7ToYaz0j]1B43c[1o>2
+Z21 DEx4 work 3 exe 0 22 lC98Kb6eA>cdm`cik58Wz1
+l48
+L42
+VY@S2E0<BK3boefO1gQTB00
+!s100 P4hYBFiVRGFeK7<9RQ4hD1
 R7
 32
-R16
-!i10b 1
 R17
+!i10b 1
 R18
 R19
+R20
 !i113 1
 R12
 R13
 Eexe_tb
-Z20 w1489503184
+Z22 w1489674876
 R1
 R2
 R3
 R4
-Z21 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/exe_tb.vhd
-Z22 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/exe_tb.vhd
+Z23 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/exe_tb.vhd
+Z24 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/exe_tb.vhd
 l0
 L5
-VkXA^gjG;3T=F?6mEQWjNO1
+Vc]FZl;I]neA0IJ6OnCSoi2
 !s100 iHhVjZ];`f[@5;?zcPGT_0
 R7
 32
-R16
+Z25 !s110 1489780319
 !i10b 1
-R17
-Z23 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/exe_tb.vhd|
-Z24 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/exe_tb.vhd|
+Z26 !s108 1489780319.348000
+Z27 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/exe_tb.vhd|
+Z28 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/exe_tb.vhd|
 !i113 1
 R12
 R13
@@ -116,40 +116,40 @@ Abehavior
 R1
 R2
 R3
-DEx4 work 6 exe_tb 0 22 kXA^gjG;3T=F?6mEQWjNO1
+DEx4 work 6 exe_tb 0 22 c]FZl;I]neA0IJ6OnCSoi2
 l42
 L8
-Vb7V=IzVWmGgKU]NfHCbTc1
+Ve;cP0eCgS3KlH>HUFTcVb3
 !s100 7o2[7lmjc3l;f4M5f@55Y2
 R7
 32
-R16
+R25
 !i10b 1
-R17
-R23
-R24
+R26
+R27
+R28
 !i113 1
 R12
 R13
 Efetch
-Z25 w1489520911
+Z29 w1489722638
 R1
 R2
 R3
 R4
-Z26 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/fetch.vhd
-Z27 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/fetch.vhd
+Z30 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/fetch.vhd
+Z31 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/fetch.vhd
 l0
 L5
-V=SA0W3oo^zBb6XnmBfEJk2
-!s100 Ji:bl[d958=0PbCiR>0Uc2
+V_ZO=0M7T]ZXUCa9EaZ0W?0
+!s100 bb4O:RGdY0OocFAzgkA:?3
 R7
 32
-R16
+Z32 !s110 1489780320
 !i10b 1
-R17
-Z28 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/fetch.vhd|
-Z29 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/fetch.vhd|
+Z33 !s108 1489780320.399000
+Z34 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/fetch.vhd|
+Z35 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/fetch.vhd|
 !i113 1
 R12
 R13
@@ -157,81 +157,40 @@ Aarch
 R1
 R2
 R3
-DEx4 work 5 fetch 0 22 =SA0W3oo^zBb6XnmBfEJk2
+DEx4 work 5 fetch 0 22 _ZO=0M7T]ZXUCa9EaZ0W?0
 l33
-L24
-VDaN[49CaG?LNj;B=gnE3=2
-!s100 VE@SWal41dZc6ETX_UiZN0
+L27
+V:fRI_zoUI=;0N]_a:?8f>0
+!s100 LiSn0Y4>:adzOI1H<e_VB3
 R7
 32
-R16
+R32
 !i10b 1
-R17
-R28
-R29
-!i113 1
-R12
-R13
-Efetch_tb
-Z30 w1489516328
-R1
-R2
-R3
-R4
-Z31 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/first_three_stage_tb.vhd
-Z32 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/first_three_stage_tb.vhd
-l0
-L5
-VnbTRGBZV2VSoefRf[]4<E3
-!s100 5798[>C<_=<XUaE1Z2MfB0
-R7
-32
-!s110 1489516333
-!i10b 1
-!s108 1489516333.000000
-Z33 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/first_three_stage_tb.vhd|
-Z34 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/first_three_stage_tb.vhd|
-!i113 1
-R12
-R13
-Abehavior
-R1
-R2
-R3
-DEx4 work 8 fetch_tb 0 22 nbTRGBZV2VSoefRf[]4<E3
-l127
-L8
-Vi`HIPG0IR]IafagWljzX01
-!s100 Dl^VF_NUe=@KlLQcm=M?E0
-R7
-32
-!s110 1489516285
-!i10b 1
-!s108 1489516285.000000
 R33
 R34
+R35
 !i113 1
 R12
 R13
 Efive_stage_tb
-Z35 w1489520980
+Z36 w1489780448
 R1
 R2
 R3
 R4
-Z36 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/first_five_stage_tb.vhd
-Z37 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/first_five_stage_tb.vhd
+Z37 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/first_five_stage_tb.vhd
+Z38 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/first_five_stage_tb.vhd
 l0
 L5
-V>J`P@cFaK0VC6bjED[[Qi2
+Va;zdZ;f;5>K^3j=f<RJa<0
 !s100 j?[c<cZ_?R[NURM?zOB`Z0
 R7
 32
-R16
+Z39 !s110 1489780452
 !i10b 1
-R17
-Z38 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/first_five_stage_tb.vhd|
-Z39 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/first_five_stage_tb.vhd|
+Z40 !s108 1489780452.333000
+Z41 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/first_five_stage_tb.vhd|
+Z42 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/first_five_stage_tb.vhd|
 !i113 1
 R12
 R13
@@ -239,81 +198,40 @@ Abehavior
 R1
 R2
 R3
-DEx4 work 13 five_stage_tb 0 22 >J`P@cFaK0VC6bjED[[Qi2
-l170
+DEx4 work 13 five_stage_tb 0 22 a;zdZ;f;5>K^3j=f<RJa<0
+l199
 L8
-V2kQYkHBTYVNTEMR`=DPjJ0
-!s100 GQX6jQlfSb8goj>NB9RhU2
+VPiF1<iD<=7Mlb^BO?074>1
+!s100 1XU>P97_DAzXkhz0?Db6i2
 R7
 32
-R16
-!i10b 1
-R17
-R38
 R39
+!i10b 1
+R40
+R41
+R42
 !i113 1
 R12
 R13
-Efour_stage_tb
-Z40 w1489011161
-R1
-R2
-R3
-Z41 dC:/Users/PrinceJed/Desktop/ComputerArchitecture/src
-Z42 8C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_four_stage_tb.vhd
-Z43 FC:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_four_stage_tb.vhd
-l0
-L5
-Vf4J?T<z@^eUKNig4zDAPQ2
-!s100 K[lV[_BciUY=6lK`OC?670
-Z44 OV;C;10.5b;63
-32
-!s110 1489011164
-!i10b 1
-!s108 1489011164.000000
-Z45 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_four_stage_tb.vhd|
-Z46 !s107 C:\Users\PrinceJed\Desktop\ComputerArchitecture\src\first_four_stage_tb.vhd|
-!i113 1
-Z47 o-work work -2002 -explicit
-Z48 tExplicit 1 CvgOpt 0
-Abehavior
-R1
-R2
-R3
-DEx4 work 13 four_stage_tb 0 22 f4J?T<z@^eUKNig4zDAPQ2
-l155
-L8
-Vz>JBcj^V`:502V2=TY6ag2
-!s100 <R6EMWbHUaOjjlSSz6_Ro0
-R44
-32
-!s110 1489010591
-!i10b 1
-!s108 1489010591.000000
-R45
-R46
-!i113 1
-R47
-R48
 Eid
-R0
+Z43 w1489756901
 R1
 R2
 R3
 R4
-Z49 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/id.vhd
-Z50 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/id.vhd
+Z44 8\\campus.mcgill.ca\EMF\CPE\zwang123\Desktop\ComputerArchitecture-Ziqi\src\id.vhd
+Z45 F\\campus.mcgill.ca\EMF\CPE\zwang123\Desktop\ComputerArchitecture-Ziqi\src\id.vhd
 l0
 L5
-VYIP@mE5;?DR3f7QOenANj3
-!s100 55?zjJTEHl`EHYAB]aFDL1
+Vo_ZP>YfTP<B`NF:JNdC[[3
+!s100 [MiXe1TEKNCJlVdn17:Q31
 R7
 32
-Z51 !s110 1489521408
+Z46 !s110 1489780322
 !i10b 1
-Z52 !s108 1489521408.000000
-Z53 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/id.vhd|
-Z54 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/id.vhd|
+Z47 !s108 1489780322.377000
+Z48 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|\\campus.mcgill.ca\EMF\CPE\zwang123\Desktop\ComputerArchitecture-Ziqi\src\id.vhd|
+Z49 !s107 \\campus.mcgill.ca\EMF\CPE\zwang123\Desktop\ComputerArchitecture-Ziqi\src\id.vhd|
 !i113 1
 R12
 R13
@@ -321,40 +239,40 @@ Abehavior
 R1
 R2
 R3
-DEx4 work 2 id 0 22 YIP@mE5;?DR3f7QOenANj3
-l34
-L27
-VmRZ?[I@<_C7cNO3U:NDR^0
-!s100 ab;=C4g5K64DoXFldnb3=3
+DEx4 work 2 id 0 22 o_ZP>YfTP<B`NF:JNdC[[3
+l44
+L34
+V7nHX9U`JJS@GJAhXVSTG23
+!s100 H7LDBRm21>CL4QAcARkYi0
 R7
 32
-R51
+R46
 !i10b 1
-R52
-R53
-R54
+R47
+R48
+R49
 !i113 1
 R12
 R13
 Einstruction_memory
-Z55 w1489521403
+Z50 w1489758951
 R1
 R2
 R3
 R4
-Z56 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/instruction_memory.vhd
-Z57 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/instruction_memory.vhd
+Z51 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/instruction_memory.vhd
+Z52 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/instruction_memory.vhd
 l0
 L7
-VUOhG=HD096hWSanmB=MdQ2
+VUY4OhS:;NWO@Ue7NPEa:l0
 !s100 W@NSHVSdIm?Y8W2PbW_G13
 R7
 32
-R51
+Z53 !s110 1489780323
 !i10b 1
-R52
-Z58 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/instruction_memory.vhd|
-Z59 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/instruction_memory.vhd|
+Z54 !s108 1489780323.351000
+Z55 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/instruction_memory.vhd|
+Z56 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/instruction_memory.vhd|
 !i113 1
 R12
 R13
@@ -362,98 +280,102 @@ Artl
 R1
 R2
 R3
-DEx4 work 18 instruction_memory 0 22 UOhG=HD096hWSanmB=MdQ2
+DEx4 work 18 instruction_memory 0 22 UY4OhS:;NWO@Ue7NPEa:l0
 l30
 L24
-V:Bl@OAN?5;N>ePAM4T_XV0
-!s100 hTTf7VPT?ZfCCWm=I:FzC1
+VlFVS4O?lmW]W3QU<RaoPj0
+!s100 L_j>A29EgNCil0z8j_YWA2
 R7
 32
-R51
+R53
 !i10b 1
-R52
-R58
-R59
+R54
+R55
+R56
 !i113 1
 R12
 R13
 Emem
-R0
+Z57 w1489674881
 R1
-Z60 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
-Z61 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Z58 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z59 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
 R2
 R3
 R4
-Z62 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/mem.vhd
-Z63 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/mem.vhd
+Z60 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/mem.vhd
+Z61 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/mem.vhd
 l0
 L11
-V0[Kg40GeizkU12Fo0[@5]1
+Viz;jnOze30bAZFnF=THz;0
 !s100 ]zG@hGFl12AWA8ZFc;BNT0
 R7
 32
-R51
+Z62 !s110 1489780324
 !i10b 1
-R52
-Z64 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/mem.vhd|
-Z65 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/mem.vhd|
+Z63 !s108 1489780324.270000
+Z64 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/mem.vhd|
+Z65 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/mem.vhd|
 !i113 1
 R12
 R13
 Astructure
 R1
-R60
-R61
+R58
+R59
 R2
 R3
-DEx4 work 3 mem 0 22 0[Kg40GeizkU12Fo0[@5]1
+DEx4 work 3 mem 0 22 iz;jnOze30bAZFnF=THz;0
 l71
 L28
-V_?U1`55;<8f4cE[Db1nlE0
+VaS<@I1e3IbF3KOgPVlfaJ2
 !s100 JXEfhKV]3=zIkV022b;K>2
 R7
 32
-R51
+R62
 !i10b 1
-R52
+R63
 R64
 R65
 !i113 1
 R12
 R13
-Ememory
-Z66 w1488821077
+Emem2
+Z66 w1489779233
 R1
+R58
+R59
 R2
 R3
-R41
-Z67 8C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd
-Z68 FC:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd
+R4
+Z67 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/mem2.vhd
+Z68 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/mem2.vhd
 l0
-L7
-VTF8h29n45=d:Y]6GOTzi;2
-!s100 ;F`Qn;?jf42zPQP;ZmS8X3
-R44
+L11
+VMJ^zA`mLI9TlO8IP=C;Ie3
+!s100 [4hfo5eNaUNoG1GfOjDmA3
+R7
 32
-Z69 !s110 1488840186
+Z69 !s110 1489780325
 !i10b 1
-Z70 !s108 1488840186.000000
-Z71 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd|
-Z72 !s107 C:/Users/PrinceJed/Desktop/ComputerArchitecture/src/memory.vhd|
+Z70 !s108 1489780325.127000
+Z71 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/mem2.vhd|
+Z72 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/mem2.vhd|
 !i113 1
-R47
-R48
-Artl
+R12
+R13
+Astructure
 R1
+R58
+R59
 R2
 R3
-DEx4 work 6 memory 0 22 TF8h29n45=d:Y]6GOTzi;2
-l30
-L24
-VdW2=T0Jz5S@H9Z0IO=Km72
-!s100 [iZD_:<ZZL@VY[FZd4T_a2
-R44
+DEx4 work 4 mem2 0 22 MJ^zA`mLI9TlO8IP=C;Ie3
+l38
+L33
+VbJ?[F91AYbm?J2V`ZCS5Y3
+!s100 6QPUUW[RlKVj@Z:eXlznM1
+R7
 32
 R69
 !i10b 1
@@ -461,72 +383,72 @@ R70
 R71
 R72
 !i113 1
-R47
-R48
+R12
+R13
 Ememory_control
-R0
+R57
 R1
-R60
-R61
+R58
+R59
 R2
 R3
 R4
-Z73 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/memory_control.vhd
-Z74 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/memory_control.vhd
+Z73 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/memory_control.vhd
+Z74 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/memory_control.vhd
 l0
 L11
-VVT`:VWeEnl47Nj@BELa;43
+VB:;k9Al8mmcP3FMQH:^aO2
 !s100 him[:D4JLdPFETdU;l8:i0
 R7
 32
-R51
+Z75 !s110 1489780326
 !i10b 1
-R52
-Z75 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/memory_control.vhd|
-Z76 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/memory_control.vhd|
+Z76 !s108 1489780325.988000
+Z77 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/memory_control.vhd|
+Z78 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/memory_control.vhd|
 !i113 1
 R12
 R13
 Abehavior
 R1
-R60
-R61
+R58
+R59
 R2
 R3
-Z77 DEx4 work 14 memory_control 0 22 VT`:VWeEnl47Nj@BELa;43
+DEx4 work 14 memory_control 0 22 B:;k9Al8mmcP3FMQH:^aO2
 l42
 L32
-Z78 VJ<jnD5^mn?j6ole;RVYRg3
-Z79 !s100 ?:YQV`maHmU[R0_[8kRKm0
+VBf^cYN]V=jV>zAeZUjB`n1
+!s100 ?:YQV`maHmU[R0_[8kRKm0
 R7
 32
-R51
-!i10b 1
-R52
 R75
+!i10b 1
 R76
+R77
+R78
 !i113 1
 R12
 R13
 Ewb
-R0
+Z79 w1489674882
 R1
 R2
 R3
 R4
-Z80 8C:/Users/david/workspace/project_computer/ComputerArchitecture/src/wb.vhd
-Z81 FC:/Users/david/workspace/project_computer/ComputerArchitecture/src/wb.vhd
+Z80 8//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/wb.vhd
+Z81 F//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/wb.vhd
 l0
 L5
-VR[jAaKYdhkP[dPkcHmXUa1
+VV<f=IVUc45LLE??kXg5Kd1
 !s100 lZYJ=fCK^g<=8WTLmVIfG1
 R7
 32
-R8
+Z82 !s110 1489780327
 !i10b 1
-R9
-Z82 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/david/workspace/project_computer/ComputerArchitecture/src/wb.vhd|
-Z83 !s107 C:/Users/david/workspace/project_computer/ComputerArchitecture/src/wb.vhd|
+Z83 !s108 1489780326.851000
+Z84 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|//campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/wb.vhd|
+Z85 !s107 //campus.mcgill.ca/EMF/CPE/zwang123/Desktop/ComputerArchitecture-Ziqi/src/wb.vhd|
 !i113 1
 R12
 R13
@@ -534,18 +456,18 @@ Abeha
 R1
 R2
 R3
-DEx4 work 2 wb 0 22 R[jAaKYdhkP[dPkcHmXUa1
+DEx4 work 2 wb 0 22 V<f=IVUc45LLE??kXg5Kd1
 l18
 L17
-VO8ahYV3hcJY<DBb^E@IC90
+Vi?8KH2V0Zh[7J1]3c^G9i1
 !s100 n3_2=IglVk2U0I]WmFGeQ0
 R7
 32
-R8
-!i10b 1
-R9
 R82
+!i10b 1
 R83
+R84
+R85
 !i113 1
 R12
 R13
