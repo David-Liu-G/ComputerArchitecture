@@ -45,9 +45,7 @@ begin
 				instruction <= m_readdata;
 				m_addr <= pc;
 				pc_out <= pc - 4;
-				if (pc < 50) then
-					pc <= pc + 4;
-				end if;
+				pc <= pc + 4;
 				stall <= '0';
 			else
 				instruction <= "00000000000000000000000000000000";
@@ -57,7 +55,9 @@ begin
 	
 	elsif (clock'event and clock = '0') then 
 		if (reset = '0' and flush = '1') then
-			pc <= pc_in ; 
+			pc <= pc_in ;
+			m_addr <= pc_in - 4; 
+			instruction <= (others=>'0');
 		end if;
 	end if;
 	

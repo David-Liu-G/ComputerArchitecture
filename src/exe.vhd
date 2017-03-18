@@ -174,22 +174,22 @@ begin
 			elsif (instruction_type = 24) then --branch on equal
 				if(sign_operand1 = sign_operand2) then
 					flush <= '1';
-					pc_pointer_out <= pc_pointer + sign_immediate;
+					pc_pointer_out <= (pc_pointer/4 + sign_immediate + 2)*4;
 				end if;
 			elsif (instruction_type = 25) then --branch on not equal
 				if(not(sign_operand1 = sign_operand2)) then
 					flush <= '1';
-					pc_pointer_out <= pc_pointer + sign_immediate;
+					pc_pointer_out <= (pc_pointer/4 + sign_immediate + 2)*4;
 				end if;
 			elsif (instruction_type = 26) then --jump
 				flush <= '1';
-				pc_pointer_out <= to_integer(unsigned(jump_addr));
+				pc_pointer_out <= 4 * to_integer(unsigned(jump_addr))+4;
 			elsif (instruction_type = 27) then --jump register
 				flush <= '1';
-				pc_pointer_out <= sign_operand1;
+				pc_pointer_out <= 4 * sign_operand1+4;
 			elsif (instruction_type = 28) then --jump and link
 				flush <= '1';
-				pc_pointer_out <= to_integer(unsigned(jump_addr));
+				pc_pointer_out <= 4 * to_integer(unsigned(jump_addr))+4;
 			end if;
 		end if;
 

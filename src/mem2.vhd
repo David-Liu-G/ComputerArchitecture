@@ -26,7 +26,9 @@ PORT (  clk, stall_in: IN STD_LOGIC;
 	exe_forward_valid: IN std_logic;
 	mem_data_to_forward: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
 	load_hazard: IN std_logic:= '0';
-	 load_forward: OUT std_logic :='0'
+	load_forward: OUT std_logic :='0';
+	mem2_read: IN std_logic := '0';
+	mem2_memories: OUT std_logic_vector (31 downto 0):= (others=>'0')
 	);
 END mem2;
 
@@ -101,6 +103,18 @@ BEGIN
 				end if;
 
 				
+			end if;
+		end if;
+	end process;
+
+	process(mem2_read)
+	variable counter: integer := 0;
+	begin
+		if(rising_edge(mem2_read)) then
+			mem2_memories <= ram_block(counter);
+			counter:= counter +1;
+			if(counter > (ram_size/4)-1) then
+				counter :=0;
 			end if;
 		end if;
 	end process;

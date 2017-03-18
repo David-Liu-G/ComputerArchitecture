@@ -84,11 +84,13 @@ public class Tools {
      * @throws Exception
      */
     public static String formatToBinary(String str, int binary_length) throws Exception {
+    	int val = Integer.valueOf(str);
+    	int high = (int) (Math.pow(2,binary_length) - 1);
+    	int low = (int) -Math.pow(2,binary_length);
+    	if ((val > high) || (val < low)) throw new Exception("Custom Exception -> Binary format exceeded.");
         str = Integer.toBinaryString(Integer.valueOf(str));
-        if (str.length() <= binary_length)
-            str = (new String(new char[binary_length - str.length()]).replace('\0', '0')) + str;
-        else
-            throw new Exception("Custom Exception -> Binary format exceeded.");
+        if (str.length() > binary_length) str = str.substring(str.length() - binary_length);
+        str = (new String(new char[binary_length - str.length()]).replace('\0', '0')) + str;
         return str;
     }
 

@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+library std;
+use std.textio.all;
 
 entity five_stage_tb is
 end five_stage_tb;
@@ -68,7 +70,9 @@ port(
 	exe_forward_index, mem_forward_index: IN std_logic_vector(4 DOWNTO 0);
 	exe_data_to_forward, mem_data_to_forward: IN STD_LOGIC_VECTOR(31 DOWNTO 0);
 	op1_index_out,op2_index_out: OUT std_logic_vector(4 DOWNTO 0);
-	need_stall_dectection: OUT std_logic_vector(1 DOWNTO 0) 
+	need_stall_dectection: OUT std_logic_vector(1 DOWNTO 0);
+	id_read: IN std_logic;
+	id_rf: OUT std_logic_vector (31 downto 0)
 );
 end component;
 
@@ -124,7 +128,9 @@ PORT (  clk, stall_in: IN STD_LOGIC;
 	exe_forward_valid: IN std_logic;
 	mem_data_to_forward: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
 	load_hazard: IN std_logic:= '0';
-	 load_forward: OUT std_logic :='0'
+	load_forward: OUT std_logic :='0';
+	mem2_read: IN std_logic := '0';
+	mem2_memories: OUT std_logic_vector (31 downto 0):= (others=>'0')
 	);
 END COMPONENT;
 
@@ -195,6 +201,11 @@ signal wb_in_dump : std_logic;
 
 signal load_hazard: std_logic:= '0';
 
+signal mem2_read,id_read: std_logic:= '0';
+signal mem2_memories,id_rf : std_logic_vector(31 downto 0);
+
+
+
 
 begin
 
@@ -259,7 +270,9 @@ port map (
 	mem_data_to_forward => mem_data_to_forward,
 	op1_index_out => d_op1_index,
 	op2_index_out => d_op2_index,
-	need_stall_dectection => d_need_stall_dectection
+	need_stall_dectection => d_need_stall_dectection,
+	id_read => id_read,
+	id_rf => id_rf
 );
 
 ex: exe
@@ -316,7 +329,9 @@ PORT MAP(  clk => clk,
 	exe_forward_valid => e_forward_valid,
 	mem_data_to_forward =>mem_data_to_forward,
 	load_hazard => load_hazard,
-	 load_forward => mem_load_forward
+	load_forward => mem_load_forward,
+	mem2_read => mem2_read,
+	mem2_memories => mem2_memories
 	);
 
 writeback: wb
@@ -340,6 +355,13 @@ begin
 end process;
 
 test_process : process
+      file file_pointer : text;
+        variable line_content : string(1 to 32);
+        variable bin_value : std_logic_vector(31 downto 0);
+      variable line_num, line_num1 : line;
+        variable i,j : integer := 0;
+        variable char : character:='0'; 
+
 begin
 
 -- put your tests here
@@ -348,32 +370,54 @@ wait for 2*clk_period;
 wait until (clk = '1');
 
 f_reset <= '0';
-wait for 1.1 * clk_period;
 
-assert (f_instruction = X"00432820") severity error;
-report "1fetch finished";
+wait for 10000 ns;
+file_open(file_pointer,"register_file.txt",WRITE_MODE);      
+        --We want to store binary values from 0000 to 1111 in the file.
+      for i in 0 to 31 loop 
+	wait until (falling_edge(clk));
+	id_read <= '1';
+	wait until (rising_edge(clk));
+        bin_value := id_rf;
+	id_read <= '0';
 
-wait for clk_period;
+        --convert each bit value to character for writing to file.
+        for j in 0 to 31 loop
+            if(bin_value(j) = '0') then
+                line_content(32-j) := '0';
+            else
+                line_content(32-j) := '1';
+            end if; 
+        end loop;
+        write(line_num1,line_content); --write the line.
+      writeline (file_pointer,line_num1); --write the contents into the file.
+      end loop;
+      file_close(file_pointer); --Close the file after writing.
+        wait;
 
-assert (f_instruction = X"00E83020") severity error;
-report "2fetch finished";
 
-wait for clk_period;
+ file_open(file_pointer,"memory.txt",WRITE_MODE);      
+        --We want to store binary values from 0000 to 1111 in the file.
+      for i in 0 to 8191 loop 
+	wait until (falling_edge(clk));
+	mem2_read <= '1';
+	wait until (rising_edge(clk));
+        bin_value := mem2_memories;
+	mem2_read <= '0';
 
-assert (f_instruction = X"01242022") severity error;
-report "3fetch finished";
-assert (to_integer(signed(e_alu_result)) = 64) severity error;
-report "get result";
-
-wait for clk_period;
-
-assert (to_integer(signed(e_alu_result)) = 66) severity error;
-report "get result";
-
-wait for clk_period;
-
-assert (to_integer(signed(e_alu_result)) = -44) severity error;
-report "get result";
+        --convert each bit value to character for writing to file.
+        for j in 0 to 31 loop
+            if(bin_value(j) = '0') then
+                line_content(32-j) := '0';
+            else
+                line_content(32-j) := '1';
+            end if; 
+        end loop;
+        write(line_num,line_content); --write the line.
+      writeline (file_pointer,line_num); --write the contents into the file.
+      end loop;
+      file_close(file_pointer); --Close the file after writing.
+        wait;
 
 wait;
 

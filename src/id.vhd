@@ -27,7 +27,9 @@ ENTITY ID IS
 			exe_forward_index, mem_forward_index: IN std_logic_vector(4 DOWNTO 0);
 			exe_data_to_forward, mem_data_to_forward: IN STD_LOGIC_VECTOR(31 DOWNTO 0);
 			op1_index_out,op2_index_out: OUT std_logic_vector(4 DOWNTO 0):=(others=>'0');
-			need_stall_dectection: OUT std_logic_vector(1 DOWNTO 0) :="00" --first represents op1, second represents op2
+			need_stall_dectection: OUT std_logic_vector(1 DOWNTO 0) :="00"; --first represents op1, second represents op2
+			id_read: IN std_logic := '0';
+			id_rf: OUT std_logic_vector (31 downto 0):= (others=>'0')
 		);
 END ID;
 
@@ -282,6 +284,20 @@ ARCHITECTURE behavior OF ID IS
 		ALU_type <= ALU_type_temp when flush = '0' else
 		        (others=>'0'); 
 												
-			
+	process(id_read)
+	variable counter: integer := 0;
+	begin
+		if(rising_edge(id_read)) then
+			if( not (counter =0)) then
+				id_rf <= registers(counter);
+			else
+				id_rf <= (others=>'0');
+			end if;
+			counter:= counter +1;
+			if(counter > 31) then
+				counter :=0;
+			end if;
+		end if;
+	end process;		
 END behavior;
 		

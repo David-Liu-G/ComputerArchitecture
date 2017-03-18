@@ -28,7 +28,7 @@ public class Assembler {
         // assemble
         List<SpecificInstruction> binary = buildBinaryInstructions(path_in);
         // write to file
-        binary.forEach(System.out::println);
+        //binary.forEach(System.out::println);
         writeBinaryFile(path_out, binary);
     }
 
@@ -121,10 +121,13 @@ public class Assembler {
         int line_index = 0;
         String op, original_op;
         for (String line : code) {
+Tools.print(line_index);
+
             op = line.substring(0, Math.min(5, line.length()));
             original_op = original_no_labels.get(line_index);
             // remove all non alpha characters
             op = op.replaceAll("[^a-zA-Z\\\\s]", "");
+Tools.print(original.get(line_index));
             if (original_op.contains(op)) {
                 // do nothing
             } else {
@@ -221,7 +224,7 @@ public class Assembler {
                         rt = Tools.formatToBinary(Tools.remove$(parsed.get(1)), 5);
                         rs = Tools.formatToBinary(Tools.remove$(parsed.get(0)), 5);
                         immediate = parsed.get(2);
-                        immediate = Tools.formatToBinary(labels.get(immediate), 16);
+                        immediate = Tools.formatToBinary(labels.get(immediate) - line_index - 1, 16);
                         if (parsed.size() > 3)
                             throw new Exception("Custom exception -> Invalid instruction syntax.");
                     } else if (op.equals("sw") ||
@@ -277,6 +280,7 @@ public class Assembler {
                 }
                 // add instruction to instruction list
                 out.add(instruction);
+Tools.print(instruction);
             } catch (Exception e) {
                 Tools.print("Compilation error at line: " + original.get(line_index));
                 e.printStackTrace();
