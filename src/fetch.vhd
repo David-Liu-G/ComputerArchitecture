@@ -58,7 +58,6 @@ begin
 
 	elsif (clock'event and clock = '0') then -- handle flush(jump and branch here)
 		if (reset = '0' and flush = '1') then -- branch predict taken fails
-
 			pc <= pc_in ;
 			m_addr <= pc_in - 4; 
 			instruction <= (others=>'0'); --change the instruction into NOP
