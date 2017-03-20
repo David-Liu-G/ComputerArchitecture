@@ -10,7 +10,7 @@ vcom mem.vhd
 vcom wb.vhd
 
 ;# Start simulation
-vsim five_stage_processor
+vsim -t ps work.five_stage_processor
 
 ;# Run for 20,000 ns
 run 20000ns

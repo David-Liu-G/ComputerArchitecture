@@ -372,6 +372,7 @@ wait until (clk = '1');
 f_reset <= '0';
 
 wait for 10000 ns;
+report "begin writing mem and registers to txt file";
 file_open(file_pointer,"register_file.txt",WRITE_MODE);      
         --We want to store binary values from 0000 to 1111 in the file.
       for i in 0 to 31 loop 
