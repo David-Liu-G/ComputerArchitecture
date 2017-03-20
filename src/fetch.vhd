@@ -36,33 +36,35 @@ begin
 	
 
     	if (clock'event and clock = '1') then
-		if (reset = '1') then
+		if (reset = '1') then --reset the instruction
 			m_addr <= 0;
 			pc <=4;
 			stall <= '1';
-		elsif (reset = '0') then
+		elsif (reset = '0') then --takes the current instruction and the current program counter
 			if (stall_in = '0') then
 				instruction <= m_readdata;
 				m_addr <= pc;
 				pc_out <= pc - 4;
 				if (pc < 32764) then
-				pc <= pc + 4;
+				pc <= pc + 4; --update the program counter
 				end if;
 				stall <= '0';
-			else
+			else --stall and clear the instruction
 				instruction <= "00000000000000000000000000000000";
 				stall <= '1';
 			end if;
 		end if;
 	
-	elsif (clock'event and clock = '0') then 
-		if (reset = '0' and flush = '1') then
+
+	elsif (clock'event and clock = '0') then -- handle flush(jump and branch here)
+		if (reset = '0' and flush = '1') then -- branch predict taken fails
+
 			pc <= pc_in ;
 			m_addr <= pc_in - 4; 
-			instruction <= (others=>'0');
+			instruction <= (others=>'0'); --change the instruction into NOP
 		end if;
 	end if;
-	
+
 	end process;
 	
 	

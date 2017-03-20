@@ -59,8 +59,10 @@ clock_process: process (clock, load_forward)
 	variable big_buffer: std_logic_vector (63 downto 0);
 begin
 	if (clock'event and clock = '1')or(rising_edge(load_forward)) then
+	  	  --initializing pointer for pc
 		current_pc_for_jal <= pc_pointer;
 		
+		--convert each field of the MIPS register into signed integer		
 		sign_operand1 := to_integer(signed(operand1));
 		sign_operand2 := to_integer(signed(operand2));
 
@@ -68,9 +70,10 @@ begin
 		sign_shamt := to_integer(signed(shamt));
 
 		instruction_type := to_integer(unsigned(alu_type));
-
+		
+		-- check if mem has forwarded data to process to exe
 		if(load_forward= '1') then 
-			if(op1_index_delay = load_index) then
+			if(op1_index_delay = load_index) then  -- check which operand need to be forwarded
 				sign_operand1 := to_integer(signed(load_data));
 			end if;
 			if(op2_index_delay = load_index) then
@@ -78,7 +81,7 @@ begin
 			end if;
 		end if;
 
-		flush <= '0';
+		flush <= '0'; --clear flush signal
 
 		if (stall = '1') then
 			sign_result := 0;
@@ -90,7 +93,8 @@ begin
 			operand2_out <= operand2;
 			stall_out <= '0';
 			result_index_out <= result_index_in;
-
+			
+			-- check whether this instruction could possibly forward useful data to the next
 			if (alu_type="10100" OR alu_type="10110" OR alu_type="11000" 
 			or alu_type="11001" or alu_type="11010" or alu_type="11011" 
 			or alu_type="10101" or alu_type="10111" or alu_type="UUUUU" ) then --lw,sw, jump/branch, reserverd				
@@ -174,7 +178,7 @@ begin
 			elsif (instruction_type = 24) then --branch on equal
 				if(sign_operand1 = sign_operand2) then
 					flush <= '1';
-					pc_pointer_out <= (pc_pointer/4 + sign_immediate + 2)*4;
+					pc_pointer_out <= (pc_pointer/4 + sign_immediate + 2)*4; -- add 2 extra cycs to compensate the delays from IF to EXE
 				end if;
 			elsif (instruction_type = 25) then --branch on not equal
 				if(not(sign_operand1 = sign_operand2)) then
@@ -196,7 +200,7 @@ begin
 	end if;
 end process;
 
-
+-- set the lw hazard detection signal (stall fetch and wait mem to forward)
 load_hazard <= '1' when ((alu_type_delay = "10100") and (need_stall_dectection(1) = '1') and (op1_index = result_index_in_delay)) else
 		'1' when ((alu_type_delay = "10100") and (need_stall_dectection(0) = '1') and (op2_index = result_index_in_delay)) else
 		'0';

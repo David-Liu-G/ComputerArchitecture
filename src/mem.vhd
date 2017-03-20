@@ -34,18 +34,6 @@ ARCHITECTURE Structure OF mem IS
 
 BEGIN
 
-	--This is the main section of the SRAM model
-	--mem_process: PROCESS (clk)
-	--BEGIN
-		----This is a cheap trick to initialize the SRAM in simulation
-		--IF(now < 1 ps)THEN
-			--For i in 0 to ram_size-1 LOOP
-				--ram_block(i) <= std_logic_vector(to_unsigned(i,8));
-			--END LOOP;
-		--end if;	
-	--END PROCESS;
-
-	
 
 	PROCESS (clk)
 	begin
@@ -54,10 +42,11 @@ BEGIN
 				stall_out <= '1';
 			else 
 				stall_out <= '0';
-
-				mem_data_to_forward <= alu_result;
+				
+				-- set forward signal valid to notify the id
+				mem_data_to_forward <= alu_result;  -- exe calculated data to forward
 				mem_forward_valid <= exe_forward_valid;
-				load_forward <= '0';
+				load_forward <= '0'; -- this is asserted when lw data is ready to forward
 
 				if (alu_type="10100") then --lw
 					read_data <= ram_block(to_integer(unsigned(alu_result)));
@@ -65,15 +54,15 @@ BEGIN
 					is_load <= '1';
 					need_wb <= '1';
 					if(load_hazard='1')then	
-						mem_data_to_forward <= ram_block(to_integer(unsigned(alu_result)));
-						load_forward <= '1';
+						mem_data_to_forward <= ram_block(to_integer(unsigned(alu_result))); --loaded data to forward
+						load_forward <= '1';-- data ready
 					end if;
 				elsif (alu_type="10110") then --sw
 					ram_block(to_integer(unsigned(alu_result))) <= operand2;
 					is_load <= '0';
 					need_wb <= '0';
 					
-				elsif (alu_type="11000" or alu_type="11001" or alu_type="11010" or alu_type="11011") then 
+				elsif (alu_type="11000" or alu_type="11001" or alu_type="11010" or alu_type="11011") then --beq,bne,j,jr
 					is_load <= '0';
 					need_wb <= '0';
 					
@@ -83,7 +72,7 @@ BEGIN
 					is_load <= '0';
 					need_wb <= '1';
 					
-				elsif (alu_type="10101" or alu_type="10111") then --rservered
+				elsif (alu_type="10101" or alu_type="10111") then --reservered
 					is_load <= '0';
 					need_wb <= '0';
 					
@@ -102,7 +91,7 @@ BEGIN
 		end if;
 	end process;
 
-	process(mem_read)
+	process(mem_read)-- process to export memory into txt
 	variable counter: integer := 0;
 	begin
 		if(rising_edge(mem_read)) then

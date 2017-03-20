@@ -50,6 +50,8 @@ ARCHITECTURE behavior OF ID IS
 			VARIABLE address: std_logic_vector(25 DOWNTO 0);
 			VARIABLE result_buff: std_logic_vector(31 DOWNTO 0);
 			
+			--5 bit code representing each instruction
+
 			CONSTANT type_add: std_logic_vector(4 DOWNTO 0):= 			"00000";
 			CONSTANT type_sub: std_logic_vector(4 DOWNTO 0):= 			"00001";
 			CONSTANT type_addi: std_logic_vector(4 DOWNTO 0):= 		"00010";
@@ -86,8 +88,9 @@ ARCHITECTURE behavior OF ID IS
 					IF(stall_in = '1') THEN
 						stall_out <= '1';
 					else
+	                                 -- initialization of the instruction format
 						stall_out <= '0';
-						current_PC_out <= current_PC_in;
+						current_PC_out <= current_PC_in; --takes the PC from the previous stage
 						shamt <= instruction(10 DOWNTO 6);
 						jump_addr <= instruction(25 DOWNTO 0);
 						
@@ -98,6 +101,8 @@ ARCHITECTURE behavior OF ID IS
 						funct := ("00"&instruction(5 DOWNTO 0));
 						immediate_16bit := instruction(15 DOWNTO 0);
 						
+                                             --op code and function code corrosponding to each instrcution
+
 						IF (opcode = X"00" AND funct = X"20") THEN
 							op1_index :=  rs;
 							op2_index :=  rt;
@@ -233,7 +238,7 @@ ARCHITECTURE behavior OF ID IS
 							ALU_type_temp <= type_jal;
 							need_stall_dectection <= "00";
 						ELSE 	
-							--NOP
+							--NOP (when the 32 bit code does not fit into any of those scenarios above)
 							op1_index := "00000";
 							op2_index := "00000";
 							result_index_out_temp <=  "00000";
@@ -241,11 +246,13 @@ ARCHITECTURE behavior OF ID IS
 							need_stall_dectection <= "00";
 						END IF;
 						
+					        --load the results to their respective op
 						op1_index_out <= op1_index;
 						op2_index_out <= op2_index;
 						op1_index_temp <= op1_index;
 						op2_index_temp <= op2_index;
 						
+                                                --sign extension
 						IF(immediate_16bit(15) = '1') THEN
 							immediate_32bit <= "1111111111111111" & immediate_16bit;
 						ELSE
@@ -256,12 +263,22 @@ ARCHITECTURE behavior OF ID IS
 			END IF;
 		END PROCESS;
 
-		PROCESS(wb_in)
+		PROCESS(wb_in) --takes the output from the write back stage
 			BEGIN
 				IF(rising_edge(wb_in) AND (NOT(result_index_in = "00000"))) THEN
 					registers(to_integer(unsigned(result_index_in))) <= result_in;
 				END IF;
 		END PROCESS;
+
+		
+		-- handling forwarding (from the higher priority to the lower)
+		-- from mem (not lw)
+		-- from alu
+		-- from register $0
+		-- from register file (not $0)
+
+
+	        --comparing the address of each op, forward to exe/mem stage if there exists dependency
 
 		op1 <=	(others=>'0') when flush = '1' else
 			exe_data_to_forward when (exe_forward_valid = '1' and exe_forward_index = op1_index_temp) else
@@ -275,13 +292,19 @@ ARCHITECTURE behavior OF ID IS
 		        (others=>'0') when op2_index_temp = "00000" else
 			registers(to_integer(unsigned(op2_index_temp)));
 
+		
+		-- flush the wrong predicted instructions into NOP 
+
+               
+	        --pass the result and instruction if the branch prediction is correct
+
 		result_index_out <= result_index_out_temp when flush = '0' else
 		        (others=>'0'); 
 
 		ALU_type <= ALU_type_temp when flush = '0' else
 		        (others=>'0'); 
 												
-	process(id_read)
+	process(id_read)-- process to export register file into txt
 	variable counter: integer := 0;
 	begin
 		if(rising_edge(id_read)) then

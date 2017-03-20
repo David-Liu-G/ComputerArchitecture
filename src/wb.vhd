@@ -21,12 +21,13 @@ begin
 		if(rising_edge(clk) and wb_stall_in = '0') then
 			reg_index_out <= reg_index_in;
 			reg_write_out <=reg_write_in;
-			if(mem_to_reg = '1') then 
+			if(mem_to_reg = '1') then --get data from data memory when memtoreg is enabled
 				data_out <= read_data;
-			else
+			else -- else get data from ALU(or register) directly
 				data_out <= reg_data;
 			end if;
 		else 
+			--set everything to 0 when clk is disabled or instruction is stalled
 			reg_index_out <= (others=>'0');
 			reg_write_out <= '0'; 
 			data_out <= (others=>'0');
