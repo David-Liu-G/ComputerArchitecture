@@ -38,10 +38,7 @@ ARCHITECTURE behavior OF ID IS
 	SIGNAL op1_index_temp,op2_index_temp: std_logic_vector(4 DOWNTO 0):=(others=>'0');
 	SIGNAL ALU_type_temp,result_index_out_temp: std_logic_vector(4 DOWNTO 0);
 	TYPE register_file IS ARRAY(register_number-1 DOWNTO 1) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
-	SIGNAL registers: register_file:= (X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",
-	                                   X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",
-	                                   X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",X"00000000",std_logic_vector(to_signed(-12, 32)),std_logic_vector(to_signed(-6, 32)),
-	                                   std_logic_vector(to_signed(72, 32)),std_logic_vector(to_signed(3, 32)),std_logic_vector(to_signed(13, 32)),std_logic_vector(to_signed(32, 32)),std_logic_vector(to_signed(52, 32)),std_logic_vector(to_signed(12, 32)),std_logic_vector(to_signed(5, 32)));
+	SIGNAL registers: register_file:= (others=>(others=>'0'));
 	
 	BEGIN		
 		ID_PROCESS: PROCESS (clk)

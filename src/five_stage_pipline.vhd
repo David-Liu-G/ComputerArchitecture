@@ -4,10 +4,10 @@ use ieee.numeric_std.all;
 library std;
 use std.textio.all;
 
-entity five_stage_tb is
-end five_stage_tb;
+entity five_stage_processor is
+end five_stage_processor;
 
-architecture behavior of five_stage_tb is
+architecture behavior of five_stage_processor is
 
 component instruction_memory is 
 GENERIC(
@@ -110,7 +110,7 @@ port(
 );
 end component;
 
-COMPONENT mem2 IS
+COMPONENT mem IS
 GENERIC(DATA_WIDTH: INTEGER:=32;
         RAM_SIZE : INTEGER := 32768);
 PORT (  clk, stall_in: IN STD_LOGIC;
@@ -129,8 +129,8 @@ PORT (  clk, stall_in: IN STD_LOGIC;
 	mem_data_to_forward: OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
 	load_hazard: IN std_logic:= '0';
 	load_forward: OUT std_logic :='0';
-	mem2_read: IN std_logic := '0';
-	mem2_memories: OUT std_logic_vector (31 downto 0):= (others=>'0')
+	mem_read: IN std_logic := '0';
+	mem_memories: OUT std_logic_vector (31 downto 0):= (others=>'0')
 	);
 END COMPONENT;
 
@@ -201,8 +201,8 @@ signal wb_in_dump : std_logic;
 
 signal load_hazard: std_logic:= '0';
 
-signal mem2_read,id_read: std_logic:= '0';
-signal mem2_memories,id_rf : std_logic_vector(31 downto 0);
+signal mem_read,id_read: std_logic:= '0';
+signal mem_memories,id_rf : std_logic_vector(31 downto 0);
 
 
 
@@ -310,7 +310,7 @@ port map(
 	load_index => mem_reg_index_out
 );
 
-meme: mem2
+meme: mem
 PORT MAP(  clk => clk,
 	stall_in => e_stall,
 
@@ -330,8 +330,8 @@ PORT MAP(  clk => clk,
 	mem_data_to_forward =>mem_data_to_forward,
 	load_hazard => load_hazard,
 	load_forward => mem_load_forward,
-	mem2_read => mem2_read,
-	mem2_memories => mem2_memories
+	mem_read => mem_read,
+	mem_memories => mem_memories
 	);
 
 writeback: wb
@@ -399,10 +399,10 @@ file_open(file_pointer,"register_file.txt",WRITE_MODE);
         --We want to store binary values from 0000 to 1111 in the file.
       for i in 0 to 8191 loop 
 	wait until (falling_edge(clk));
-	mem2_read <= '1';
+	mem_read <= '1';
 	wait until (rising_edge(clk));
-        bin_value := mem2_memories;
-	mem2_read <= '0';
+        bin_value := mem_memories;
+	mem_read <= '0';
 
         --convert each bit value to character for writing to file.
         for j in 0 to 31 loop
@@ -417,9 +417,6 @@ file_open(file_pointer,"register_file.txt",WRITE_MODE);
       end loop;
       file_close(file_pointer); --Close the file after writing.
 	report "finished writing to file";
-        wait;
-
-wait;
 
 wait;
 end process;
