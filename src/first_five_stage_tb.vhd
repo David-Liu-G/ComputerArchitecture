@@ -393,7 +393,6 @@ file_open(file_pointer,"register_file.txt",WRITE_MODE);
       writeline (file_pointer,line_num1); --write the contents into the file.
       end loop;
       file_close(file_pointer); --Close the file after writing.
-        wait;
 
 
  file_open(file_pointer,"memory.txt",WRITE_MODE);      
@@ -417,6 +416,7 @@ file_open(file_pointer,"register_file.txt",WRITE_MODE);
       writeline (file_pointer,line_num); --write the contents into the file.
       end loop;
       file_close(file_pointer); --Close the file after writing.
+	report "finished writing to file";
         wait;
 
 wait;

@@ -45,7 +45,9 @@ begin
 				instruction <= m_readdata;
 				m_addr <= pc;
 				pc_out <= pc - 4;
+				if (pc < 32764) then
 				pc <= pc + 4;
+				end if;
 				stall <= '0';
 			else
 				instruction <= "00000000000000000000000000000000";
