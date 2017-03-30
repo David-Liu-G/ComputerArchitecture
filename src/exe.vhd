@@ -3,6 +3,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity exe is
+generic(
+	branch_predictor_buffer_entity_number_bit : INTEGER := 4 --range [1, 16]
+);
 port(
 	clock : in std_logic;
 		
@@ -35,7 +38,11 @@ port(
 	op1_index,op2_index: IN std_logic_vector(4 DOWNTO 0):=(others=>'0');
 	need_stall_dectection: IN std_logic_vector(1 DOWNTO 0) := "00"; --first represents op1, second represents op2
 	load_data:IN std_logic_vector (31 downto 0);
-	load_index: IN std_logic_vector (4 downto 0)
+	load_index: IN std_logic_vector (4 downto 0);
+	branch_taken: IN std_logic := '0';
+	branch_prediction_fail: OUT std_logic := '0';
+	branch_prediction_succeed: OUT std_logic := '0';
+	branch_prediction_fail_index: OUT INTEGER := 0
 );
 end exe;
 
@@ -176,14 +183,26 @@ begin
 				alu_result <= std_logic_vector(to_signed(sign_result, 32));
 			elsif (instruction_type = 23) then --reserved 2
 			elsif (instruction_type = 24) then --branch on equal
-				if(sign_operand1 = sign_operand2) then
+				if(branch_taken = '0' and sign_operand1 = sign_operand2) then
 					flush <= '1';
 					pc_pointer_out <= (pc_pointer/4 + sign_immediate + 2)*4; -- add 2 extra cycs to compensate the delays from IF to EXE
 				end if;
+				if((branch_taken = '0' and (sign_operand1 = sign_operand2)) OR (branch_taken = '1' and NOT(sign_operand1 = sign_operand2))) then
+					branch_prediction_fail <= '1';
+					branch_prediction_fail_index <= (pc_pointer/4 + sign_immediate + 2) mod (2**(branch_predictor_buffer_entity_number_bit));
+				else
+					branch_prediction_succeed <= '1';
+				end if;
 			elsif (instruction_type = 25) then --branch on not equal
-				if(not(sign_operand1 = sign_operand2)) then
+				if(branch_taken = '0' and not(sign_operand1 = sign_operand2)) then
 					flush <= '1';
 					pc_pointer_out <= (pc_pointer/4 + sign_immediate + 2)*4;
+				end if;
+				if( (branch_taken = '0' and NOT(sign_operand1 = sign_operand2)) OR (branch_taken = '1' and (sign_operand1 = sign_operand2)) ) then
+					branch_prediction_fail <= '1';
+					branch_prediction_fail_index <= (pc_pointer/4 + sign_immediate + 2) mod (2**(branch_predictor_buffer_entity_number_bit));
+				else
+					branch_prediction_succeed <= '1';
 				end if;
 			elsif (instruction_type = 26) then --jump
 				flush <= '1';
@@ -197,6 +216,10 @@ begin
 			end if;
 		end if;
 
+	end if;
+	if (clock'event and clock = '0') then
+		branch_prediction_fail <= '0';	
+		branch_prediction_succeed <= '0';
 	end if;
 end process;
 

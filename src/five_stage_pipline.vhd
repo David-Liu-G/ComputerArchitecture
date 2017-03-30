@@ -26,9 +26,10 @@ PORT (
 );
 end component;
 
-component fetch is
+component ifetch is
 generic(
-    ram_size : INTEGER := 32768
+    ram_size : INTEGER := 32768;
+    branch_predictor_buffer_entity_number_bit : INTEGER := 4
 );
 port(
 	clock : in std_logic;
@@ -44,7 +45,11 @@ port(
   	m_addr : out integer range 0 to ram_size-1;
 	flush: IN std_logic;
 	pc_in: IN integer range 0 to ram_size-1;
-	pc_out: OUT integer range 0 to ram_size-1
+	pc_out: OUT integer range 0 to ram_size-1;
+	branch_taken: OUT std_logic;
+	branch_prediction_fail: IN std_logic ;
+	branch_prediction_succeed: IN std_logic ;
+	branch_prediction_fail_index: IN INTEGER
 );
 end component;
 
@@ -72,7 +77,9 @@ port(
 	op1_index_out,op2_index_out: OUT std_logic_vector(4 DOWNTO 0);
 	need_stall_dectection: OUT std_logic_vector(1 DOWNTO 0);
 	id_read: IN std_logic;
-	id_rf: OUT std_logic_vector (31 downto 0)
+	id_rf: OUT std_logic_vector (31 downto 0);
+	branch_taken_out: OUT std_logic;
+	branch_taken_in: IN std_logic
 );
 end component;
 
@@ -106,7 +113,11 @@ port(
 	op1_index,op2_index: IN std_logic_vector(4 DOWNTO 0);
 	need_stall_dectection: IN std_logic_vector(1 DOWNTO 0);
 	load_data:IN std_logic_vector (31 downto 0);
-	load_index: IN std_logic_vector (4 downto 0)
+	load_index: IN std_logic_vector (4 downto 0);
+	branch_taken: IN std_logic := '0';
+	branch_prediction_fail: OUT std_logic := '0';
+	branch_prediction_succeed: OUT std_logic := '0';
+	branch_prediction_fail_index: OUT INTEGER := 0
 );
 end component;
 
@@ -161,6 +172,7 @@ signal m_waitrequest : std_logic;
 signal f_stall : std_logic := '1';
 signal f_instruction : std_logic_vector (31 downto 0);
 signal f_pc_out : integer:= 0;
+signal f_branch_taken: std_logic := '0';
 
 signal d_shamt : std_logic_vector(4 downto 0);
 signal d_op1, d_op2: std_logic_vector(31 downto 0);
@@ -172,6 +184,8 @@ signal d_result_index : std_logic_vector(4 downto 0);
 signal d_jump_addr: std_logic_vector(25 downto 0);
 signal d_op1_index,d_op2_index: std_logic_vector(4 DOWNTO 0):="00000";
 signal d_need_stall_dectection: std_logic_vector(1 DOWNTO 0):= "00";
+signal d_branch_taken: std_logic := '0';
+
 
 signal e_alu_result : std_logic_vector (31 downto 0);
 signal e_alu_type : std_logic_vector(4 downto 0);
@@ -182,6 +196,9 @@ signal e_flush: std_logic := '0';
 signal e_pc_out: integer:= 0;
 signal e_current_pc_for_jal: integer:= 0;
 signal e_forward_valid: std_logic:= '0';
+signal e_branch_prediction_fail: std_logic:= '0';
+signal e_branch_prediction_succeed: std_logic:= '0';
+signal e_branch_prediction_fail_index: integer := 0;
 
 signal mem_stall : std_logic := '0';
 signal mem_data_m_waitrequest : std_logic;
@@ -223,7 +240,7 @@ port map (
     waitrequest => m_waitrequest
 );
 
-fet: fetch 
+fet: ifetch 
 port map(
     clock => clk,
     reset => f_reset,
@@ -239,7 +256,11 @@ port map(
     m_waitrequest => m_waitrequest,
 	flush => e_flush,
 	pc_in => e_pc_out,
-	pc_out => f_pc_out
+	pc_out => f_pc_out,
+	branch_taken => f_branch_taken,
+	branch_prediction_fail => e_branch_prediction_fail,
+	branch_prediction_succeed => e_branch_prediction_succeed,
+	branch_prediction_fail_index => e_branch_prediction_fail_index
 );
 
 dec: ID
@@ -272,7 +293,9 @@ port map (
 	op2_index_out => d_op2_index,
 	need_stall_dectection => d_need_stall_dectection,
 	id_read => id_read,
-	id_rf => id_rf
+	id_rf => id_rf,
+	branch_taken_out => d_branch_taken,
+	branch_taken_in => f_branch_taken
 );
 
 ex: exe
@@ -307,7 +330,11 @@ port map(
 	op2_index => d_op2_index,
 	need_stall_dectection => d_need_stall_dectection,
 	load_data => mem_data_to_forward,
-	load_index => mem_reg_index_out
+	load_index => mem_reg_index_out,
+	branch_taken => d_branch_taken,
+	branch_prediction_fail => e_branch_prediction_fail,
+	branch_prediction_succeed => e_branch_prediction_succeed,
+	branch_prediction_fail_index => e_branch_prediction_fail_index
 );
 
 meme: mem
