@@ -33,7 +33,7 @@ architecture arch of ifetch is
 	type instruction_storage is array(3 downto 0) of std_logic_vector(7 downto 0);
 	type branch_predictor_storage is array (2**(branch_predictor_buffer_entity_number_bit) - 1 downto 0) of std_logic_vector(1 downto 0);
 	signal instruction_table : instruction_storage := (others => (others => '0'));
-	signal branch_predictor : branch_predictor_storage := (others => (others => '0'));
+	signal branch_predictor : branch_predictor_storage := (others => (others => '1'));
 	signal pc : integer range 0 to ram_size-1:=4;
 	signal count : integer range 0 to 5 := 0;
 
@@ -62,7 +62,8 @@ begin
 						end if;
 					ELSE	-- "10" OR "11"
 						branch_taken <= '1';
-						pc <= pc + 4 * to_integer(signed(m_readdata(15 DOWNTO 0)));
+						pc <= pc + 4 + 4 * to_integer(signed(m_readdata(15 DOWNTO 0)));
+						m_addr <= pc + 4 * to_integer(signed(m_readdata(15 DOWNTO 0)));
 					END IF;	
 				elsif (pc < 32764) then
 					pc <= pc + 4; --update the program counter (not branch)
