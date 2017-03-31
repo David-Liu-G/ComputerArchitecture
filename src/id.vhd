@@ -29,7 +29,9 @@ ENTITY ID IS
 			op1_index_out,op2_index_out: OUT std_logic_vector(4 DOWNTO 0):=(others=>'0');
 			need_stall_dectection: OUT std_logic_vector(1 DOWNTO 0) :="00"; --first represents op1, second represents op2
 			id_read: IN std_logic := '0';
-			id_rf: OUT std_logic_vector (31 downto 0):= (others=>'0')
+			id_rf: OUT std_logic_vector (31 downto 0):= (others=>'0');
+			branch_taken_out: OUT std_logic;
+			branch_taken_in: IN std_logic
 		);
 END ID;
 
@@ -93,6 +95,7 @@ ARCHITECTURE behavior OF ID IS
 						current_PC_out <= current_PC_in; --takes the PC from the previous stage
 						shamt <= instruction(10 DOWNTO 6);
 						jump_addr <= instruction(25 DOWNTO 0);
+						branch_taken_out <= branch_taken_in;
 						
 						opcode := ("00"&instruction(31 DOWNTO 26));
 						rs := instruction(25 DOWNTO 21);

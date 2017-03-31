@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity ifetch is
 generic(
 	ram_size : INTEGER := 32768;
-	branch_predictor_buffer_entity_number_bit : INTEGER := 4 --range [1, 16]
+	branch_predictor_buffer_entity_number_bit : INTEGER := 0 --range [0, 16]
 );
 port(
 	clock : in std_logic;
@@ -54,7 +54,7 @@ begin
 				m_addr <= pc;
 				pc_out <= pc - 4;
 				if("00"&m_readdata(31 DOWNTO 26) = X"04" OR "00"&m_readdata(31 DOWNTO 26) = X"05") then --check if this instruction is a branch
-					branch_predictor_index := (pc/4 + to_integer(signed(m_readdata(15 Downto 0)))) mod (2**(branch_predictor_buffer_entity_number_bit));
+					branch_predictor_index := (pc/4 - 1) mod (2**(branch_predictor_buffer_entity_number_bit));
 					IF( branch_predictor(branch_predictor_index) = "00" OR branch_predictor(branch_predictor_index) = "01") THEN
 						branch_taken <= '0';
 						if (pc < 32764) then

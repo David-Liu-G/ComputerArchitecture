@@ -29,7 +29,7 @@ end component;
 component ifetch is
 generic(
     ram_size : INTEGER := 32768;
-    branch_predictor_buffer_entity_number_bit : INTEGER := 4
+    branch_predictor_buffer_entity_number_bit : INTEGER := 0
 );
 port(
 	clock : in std_logic;
@@ -84,6 +84,9 @@ port(
 end component;
 
 component exe is
+generic(
+	branch_predictor_buffer_entity_number_bit : INTEGER := 0 --range [0, 16]
+);
 port(
 	clock : in std_logic;
 		
