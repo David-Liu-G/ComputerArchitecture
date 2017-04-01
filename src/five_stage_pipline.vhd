@@ -224,6 +224,8 @@ signal load_hazard: std_logic:= '0';
 signal mem_read,id_read: std_logic:= '0';
 signal mem_memories,id_rf : std_logic_vector(31 downto 0);
 
+signal test_counter: integer:=0;
+
 
 
 
@@ -374,7 +376,16 @@ port map (clk =>clk,
 	  reg_write_out => wb_in_dump,
           reg_index_out => wb_result_index_in,
 	  data_out => wb_result_in
-	  );
+	  );
+
+branch_prediction_failure_counter_process: process(e_branch_prediction_fail)
+variable counter: integer :=0;
+begin
+	if(rising_edge(e_branch_prediction_fail)) then
+		counter := counter +1;
+		test_counter<= counter;
+	end if;
+end process;
 				
 clk_process : process
 begin
