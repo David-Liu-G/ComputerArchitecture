@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity exe is
 generic(
-	branch_predictor_buffer_entity_number_bit : INTEGER := 0 --range [0, 16]
+	branch_predictor_buffer_entity_number_bit : INTEGER := 4 --range [0, 16]
 );
 port(
 	clock : in std_logic;
@@ -189,7 +189,7 @@ begin
 				end if;
 				if(((branch_taken = '0') and (sign_operand1 = sign_operand2)) OR ((branch_taken = '1') and (NOT(sign_operand1 = sign_operand2)))) then
 					branch_prediction_fail <= '1';
-					branch_prediction_fail_index <= pc_pointer mod (2**(branch_predictor_buffer_entity_number_bit));
+					branch_prediction_fail_index <= (pc_pointer/4) mod (2**(branch_predictor_buffer_entity_number_bit));
 				else
 					branch_prediction_succeed <= '1';
 				end if;
@@ -200,7 +200,7 @@ begin
 				end if;
 				if( ((branch_taken = '0') and (NOT(sign_operand1 = sign_operand2))) OR ((branch_taken = '1') and (sign_operand1 = sign_operand2)) ) then
 					branch_prediction_fail <= '1';
-					branch_prediction_fail_index <= pc_pointer mod (2**(branch_predictor_buffer_entity_number_bit));
+					branch_prediction_fail_index <= (pc_pointer/4) mod (2**(branch_predictor_buffer_entity_number_bit));
 				else
 					branch_prediction_succeed <= '1';
 				end if;

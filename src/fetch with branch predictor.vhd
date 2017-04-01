@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity ifetch is
 generic(
 	ram_size : INTEGER := 32768;
-	branch_predictor_buffer_entity_number_bit : INTEGER := 0 --range [0, 16]
+	branch_predictor_buffer_entity_number_bit : INTEGER := 4 --range [0, 16]
 );
 port(
 	clock : in std_logic;
@@ -33,7 +33,7 @@ architecture arch of ifetch is
 	type instruction_storage is array(3 downto 0) of std_logic_vector(7 downto 0);
 	type branch_predictor_storage is array (2**(branch_predictor_buffer_entity_number_bit) - 1 downto 0) of std_logic_vector(1 downto 0);
 	signal instruction_table : instruction_storage := (others => (others => '0'));
-	signal branch_predictor : branch_predictor_storage := (others => (others => '1'));
+	signal branch_predictor : branch_predictor_storage := (others => (others => '0'));
 	signal pc : integer range 0 to ram_size-1:=4;
 	signal count : integer range 0 to 5 := 0;
 
