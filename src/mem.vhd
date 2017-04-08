@@ -50,6 +50,7 @@ BEGIN
 
 				if (alu_type="10100") then --lw
 					read_data <= ram_block(to_integer(unsigned(alu_result)));
+					mem_data_to_forward <= ram_block(to_integer(unsigned(alu_result)));
 					wb_index_out <= wb_index_in;
 					is_load <= '1';
 					need_wb <= '1';
