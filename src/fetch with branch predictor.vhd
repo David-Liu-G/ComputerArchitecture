@@ -87,8 +87,12 @@ begin
 	end process;
 
 	update_predictor: process (branch_prediction_fail, branch_prediction_succeed)
+	variable success_number: INTEGER:= 0;
+	variable fail_number: INTEGER:= 0;
 	begin
 		if(rising_edge(branch_prediction_fail)) then
+			fail_number := fail_number + 1;
+			report "fail " & integer'image(fail_number);
 			CASE branch_predictor(branch_prediction_fail_index) IS
 			WHEN "00" =>
 				branch_predictor(branch_prediction_fail_index) <= "01";
@@ -101,6 +105,8 @@ begin
 			END CASE;
 		
 		elsif(rising_edge(branch_prediction_succeed)) then
+			success_number := success_number + 1;
+			report "success " & integer'image(success_number);
 			CASE branch_predictor(branch_prediction_fail_index) IS
 			WHEN "00" =>
 				branch_predictor(branch_prediction_fail_index) <= "00";

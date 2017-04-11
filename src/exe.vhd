@@ -1,4 +1,4 @@
-library ieee;
+ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
@@ -192,6 +192,7 @@ begin
 					branch_prediction_fail_index <= (pc_pointer/4) mod (2**(branch_predictor_buffer_entity_number_bit));
 				else
 					branch_prediction_succeed <= '1';
+					branch_prediction_fail_index <= (pc_pointer/4) mod (2**(branch_predictor_buffer_entity_number_bit));
 				end if;
 			elsif (instruction_type = 25) then --branch on not equal
 				if(branch_taken = '0' and not(sign_operand1 = sign_operand2)) then
