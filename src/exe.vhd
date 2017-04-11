@@ -183,6 +183,10 @@ begin
 				alu_result <= std_logic_vector(to_signed(sign_result, 32));
 			elsif (instruction_type = 23) then --reserved 2
 			elsif (instruction_type = 24) then --branch on equal
+				if (branch_taken = '1' and not(sign_operand1 = sign_operand2)) then
+					flush <= '1';
+					pc_pointer_out <= pc_pointer +8;
+				end if;
 				if(branch_taken = '0' and sign_operand1 = sign_operand2) then
 					flush <= '1';
 					pc_pointer_out <= (pc_pointer/4 + sign_immediate + 2)*4; -- add 2 extra cycs to compensate the delays from IF to EXE
@@ -195,7 +199,11 @@ begin
 					branch_prediction_fail_index <= (pc_pointer/4) mod (2**(branch_predictor_buffer_entity_number_bit));
 				end if;
 			elsif (instruction_type = 25) then --branch on not equal
-				if(branch_taken = '0' and not(sign_operand1 = sign_operand2)) then
+				if (branch_taken = '1' and (sign_operand1 = sign_operand2)) then
+					flush <= '1';
+					pc_pointer_out <= pc_pointer + 8;
+				end if;
+ 				if(branch_taken = '0' and not(sign_operand1 = sign_operand2)) then
 					flush <= '1';
 					pc_pointer_out <= (pc_pointer/4 + sign_immediate + 2)*4;
 				end if;
@@ -204,6 +212,7 @@ begin
 					branch_prediction_fail_index <= (pc_pointer/4) mod (2**(branch_predictor_buffer_entity_number_bit));
 				else
 					branch_prediction_succeed <= '1';
+					branch_prediction_fail_index <= (pc_pointer/4) mod (2**(branch_predictor_buffer_entity_number_bit));
 				end if;
 			elsif (instruction_type = 26) then --jump
 				flush <= '1';
