@@ -2,7 +2,7 @@ vlib work
 
 ;# Compile components if any
 vcom five_stage_pipline.vhd
-vcom fetch.vhd
+vcom fetch_with_branch_predictor.vhd
 vcom instruction_memory.vhd
 vcom id.vhd
 vcom exe.vhd
